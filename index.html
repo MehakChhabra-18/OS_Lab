@@ -3,48 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS Lab | Page Replacement</title>
+    <title>OS Lab | Page Replacement Visualizer</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    
-    <header>
-        <h1> OS Lab </h1>
-        <p>Operating System Visualizer</p>
-    </header>
 
-    <main>
-        <section class="page-container">
-            <div class="page-heading">
-                <h2>Page Replacement</h2>
-                <p>Visualize how different page replacement algorithms manage memory frames</p>
-            </div>
-            <!--Input Section-->
+<header>
+    <div class="logo-section">
+        <div class="logo-icon">▰</div>
+        <div class="logo-text">
+            <h1>OS Lab</h1>
+            <p>Page Replacement Visualizer</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Algorithms</a>
+        <a href="#">Guide</a>
+    </nav>
+</header>
+
+<main>
+    <div class="dashboard">
+
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+
+            <!-- SIMULATION CONTROLS -->
             <section class="input-card">
-                <h3>Simulation Input</h3>
+                <h3>⚙ &nbsp; Simulation Controls</h3>
+
                 <div class="input-group">
-                    <label for="referenceString">
-                        Reference String
-                    </label>
-                    <input type="text" id="referenceString" placeholder="Example: 7 0 1 2 0 3 0 4">
+                    <label for="referenceString">Reference String</label>
+                    <input type="text" id="referenceString" placeholder="7 0 1 2 0 3 0 4">
                 </div>
 
                 <div class="input-group">
-                    <label for="frameCount">
-                        Number of Frames
-                    </label>
-                    <input 
-                         type="number"
-                         id="frameCount"
-                         min="1"
-                         max="10"
-                         placeholder="Example: 3">
+                    <label for="frameCount">Number of Frames</label>
+                    <input type="number" id="frameCount" min="1" max="10" placeholder="3">
                 </div>
 
                 <div class="input-group">
-                    <label for="algorithm">
-                        Algorithm
-                    </label>
+                    <label for="algorithm">Algorithm</label>
                     <select id="algorithm">
                         <option value="fifo">FIFO</option>
                         <option value="lru">LRU</option>
@@ -53,43 +56,143 @@
                     </select>
                 </div>
 
-                <button id="simulateBtn">Simulate</button>
+                <div class="control-buttons">
+                    <button id="simulateBtn">▷ &nbsp; Simulate</button>
+                    <button id="resetBtn">↻ &nbsp; Reset</button>
+                </div>
             </section>
 
-        <section class="visulation-card">
-            <h3>Visualization</h3>
-            <div id="visualization">
-                <p>Enter the simulation details and click Simulate</p>
-            </div>
-        </section>
+            <!-- FINAL RESULTS -->
+            <section class="result-card" id="resultCard" style="display:none;">
+                <h3>▥ &nbsp; Final Results</h3>
 
-        <section class="result-card">
-            <h3>Results</h3>
-            <div class="results">
-                <div class="result-box">
-                    <span>Page Faults</span>
-                    <strong id="pageFaults">-</strong>
+                <div class="results">
+                    <div class="result-box">
+                        <strong id="pageFaults">0</strong>
+                        <span>Page Faults</span>
+                    </div>
+
+                    <div class="result-box">
+                        <strong id="pageHits">0</strong>
+                        <span>Page Hits</span>
+                    </div>
+
+                    <div class="result-box">
+                        <strong id="hitRatio">0%</strong>
+                        <span>Hit Ratio</span>
+                    </div>
                 </div>
-                <div class="result-box">
-                    <span>Page Hits</span>
-                    <strong id="pageHits">-</strong>
+            </section>
+
+            <!-- STEP HISTORY -->
+            <section class="history-card">
+                <h3>◷ &nbsp; Step History</h3>
+
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Page</th>
+                            <th>Frames</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </section>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+
+            <!-- VISUALIZATION -->
+            <section class="visualization-card">
+
+                <div class="visualization-header">
+                    <h3>▣ &nbsp; Visualization</h3>
+
+                    <div class="speed-control">
+                        <span>Speed</span>
+                        <input type="range" id="speedControl" min="0.5" max="2" step="0.5" value="1">
+                        <span id="speedValue">1s</span>
+                    </div>
                 </div>
-                <div class="result-box">
-                    <span>Hit Ratio</span>
-                    <strong id="hitRatio">-</strong>
+
+                <div class="visualization-area">
+
+                    <div class="step-badge" id="stepCounter">
+                        Step 0 of 0
+                    </div>
+
+                    <div class="reference-section">
+                        <h4>Reference String</h4>
+                        <div id="referenceDisplay"></div>
+                    </div>
+
+                    <div class="canvas-container">
+                        <canvas id="memoryCanvas"></canvas>
+                    </div>
+
+                    <div class="step-info">
+
+                        <div class="info-box">
+                            <span>Current Page</span>
+                            <strong id="currentPage">-</strong>
+                        </div>
+
+                        <div class="info-box">
+                            <span>Result</span>
+                            <strong id="currentResult">-</strong>
+                        </div>
+
+                        <div class="info-box explanation-box">
+                            <span>Explanation</span>
+                            <p id="explanation">
+                                Click Simulate to start the visualization.
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        </section>
-    </main>
+                <div class="navigation">
+                    <button id="previousBtn" disabled>← Previous</button>
+                    <span id="navigationStep">Step 0 of 0</span>
+                    <button id="nextBtn" disabled>Next →</button>
+                </div>
 
-    <footer>
-        <p>&copy; 2026 OS Lab | Built with HTML, CSS, and JavaScript</p>
-    </footer>
-     <script src="js/script.js"></script>
+            </section>
 
-   
-    
+            <!-- FIFO PRINCIPLE -->
+            <section class="principle-card">
+                <div class="principle-icon">💡</div>
+
+                <div>
+                    <h3>FIFO Principle</h3>
+                    <p>
+                        When a page fault occurs and all frames are full,
+                        the page that has been in memory the longest
+                        (first in) is removed (first out).
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 OS Lab | Built with HTML, CSS, and JavaScript</p>
+</footer>
+
+<script src="js/algorithms/fifo.js"></script>
+<script src="js/visualization/canvas.js"></script>
+<script src="js/visualization/history.js"></script>
+<script src="js/visualization/reference.js"></script>
+<script src="js/visualization/results.js"></script>
+<script src="js/visualization/step.js"></script>
+<script src="js/script.js"></script>
+
 </body>
 </html>
