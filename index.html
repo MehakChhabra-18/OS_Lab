@@ -3,19 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS Lab</title>
+    <title>OS Lab | Page Replacement</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1> OS Lab</h1>
+        <h1> OS Lab </h1>
         <p>Operating System Visualizer</p>
     </header>
 
     <main>
-        <section class="hero">
-            <h2>Welcome to OS Lab</h2>
-            <p>Explore Operating System concepts through interactive visualizations</p>
+        <section class="page-container">
+            <div class="page-heading">
+                <h2>Page Replacement</h2>
+                <p>Visualize how different page replacement algorithms manage memory frames</p>
+            </div>
+            <!--Input Section-->
+            <section class="input-card">
+                <h3>Simulation Input</h3>
+                <div class="input-group">
+                    <label for="referenceString">
+                        Reference String
+                    </label>
+                    <input type="text" id=""referenceString" placeholder="Example: 7 0 1 2 0 3 0 4">
+                </div>
+
+                <div class="input-group">
+                    <label for="frameCount">
+                        Number of Frames
+                    </label>
+                    <input 
+                         type="number"
+                         id="frameCount"
+                         min="1"
+                         max="10"
+                         placeholder="Example: 3">
+                </div>
+
+                <div class="input-group">
+                    <label for="algorithm">
+                        Algorithm
+                    </label>
+                    <select id="algorithm">
+                        <option value="fifo">FIFO</option>
+                        <option value="lru">LRU</option>
+                        <option value="optimal">Optimal</option>
+                        <option value="lfu">LFU</option>
+                    </select>
+                </div>
+
+                <button id="simulateBtn">Simulate</button>
+            </section>
+
+        <section class="visulation-card">
+            <h3>Visualization</h3>
+            <div id="visualization">
+                <p>Enter the simulation details and click Simulate</p>
+            </div>
+        </section>
+
+        <section class="result-card">
+            <h3>Results</h3>
+            <div class="results">
+                <div class="result-box">
+                    <span>Page Faults</span>
+                    <strong id="pageFaults">-</strong>
+                </div>
+                <div class="result-box">
+                    <span>Page Hits</span>
+                    <strong id="pageHits">-</strong>
+                </div>
+                <div class="result-box">
+                    <span>Hit Ratio</span>
+                    <strong id="hitRatio">-</strong>
+                </div>
+            </div>
+        </section>
+
         </section>
     </main>
 
