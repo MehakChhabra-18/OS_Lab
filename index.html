@@ -29,10 +29,8 @@
 <main>
     <div class="dashboard">
 
-        <!-- LEFT PANEL -->
         <div class="left-panel">
 
-            <!-- SIMULATION CONTROLS -->
             <section class="input-card">
                 <h3>⚙ &nbsp; Simulation Controls</h3>
 
@@ -62,7 +60,6 @@
                 </div>
             </section>
 
-            <!-- FINAL RESULTS -->
             <section class="result-card" id="resultCard" style="display:none;">
                 <h3>▥ &nbsp; Final Results</h3>
 
@@ -84,7 +81,6 @@
                 </div>
             </section>
 
-            <!-- STEP HISTORY -->
             <section class="history-card">
                 <h3>◷ &nbsp; Step History</h3>
 
@@ -103,10 +99,8 @@
 
         </div>
 
-        <!-- RIGHT PANEL -->
         <div class="right-panel">
 
-            <!-- VISUALIZATION -->
             <section class="visualization-card">
 
                 <div class="visualization-header">
@@ -154,6 +148,7 @@
                         </div>
 
                     </div>
+
                 </div>
 
                 <div class="navigation">
@@ -164,13 +159,12 @@
 
             </section>
 
-            <!-- FIFO PRINCIPLE -->
             <section class="principle-card">
                 <div class="principle-icon">💡</div>
 
                 <div>
-                    <h3>FIFO Principle</h3>
-                    <p>
+                    <h3 id="principleTitle">FIFO Principle</h3>
+                    <p id="principleText">
                         When a page fault occurs and all frames are full,
                         the page that has been in memory the longest
                         (first in) is removed (first out).
@@ -187,11 +181,14 @@
 </footer>
 
 <script src="js/algorithms/fifo.js"></script>
+<script src="js/algorithms/lru.js"></script>
+
 <script src="js/visualization/canvas.js"></script>
 <script src="js/visualization/history.js"></script>
 <script src="js/visualization/reference.js"></script>
 <script src="js/visualization/results.js"></script>
 <script src="js/visualization/step.js"></script>
+
 <script src="js/script.js"></script>
 
 </body>

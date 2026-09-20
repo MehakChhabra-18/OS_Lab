@@ -1,16 +1,38 @@
-const currentPage = document.getElementById("currentPage");
-const currentResult = document.getElementById("currentResult");
-const explanation = document.getElementById("explanation");
+const currentPage =
+    document.getElementById("currentPage");
 
-const stepCounter = document.getElementById("stepCounter");
-const navigationStep = document.getElementById("navigationStep");
+const currentResult =
+    document.getElementById("currentResult");
 
-function updateStepInfo(step, index, totalSteps, frameCount) {
+const explanation =
+    document.getElementById("explanation");
 
-    currentPage.textContent = step.page;
-    currentResult.textContent = step.result;
+const stepCounter =
+    document.getElementById("stepCounter");
 
-    currentResult.classList.remove("hit", "fault");
+const navigationStep =
+    document.getElementById("navigationStep");
+
+
+function updateStepInfo(
+    step,
+    index,
+    totalSteps,
+    frameCount,
+    algorithm
+) {
+
+    currentPage.textContent =
+        step.page;
+
+    currentResult.textContent =
+        step.result;
+
+    currentResult.classList.remove(
+        "hit",
+        "fault"
+    );
+
 
     if (step.result === "Hit") {
 
@@ -28,12 +50,18 @@ function updateStepInfo(step, index, totalSteps, frameCount) {
             explanation.textContent =
                 `Page ${step.page} caused a page fault and was loaded into an empty frame.`;
 
-        } else {
+        } else if (algorithm === "fifo") {
 
             explanation.textContent =
-                `Page ${step.page} caused a page fault and FIFO replaced the oldest page.`;
+                `Page ${step.page} caused a page fault. FIFO replaces the oldest page in memory.`;
+
+        } else if (algorithm === "lru") {
+
+            explanation.textContent =
+                `Page ${step.page} caused a page fault. LRU replaces the page that was least recently used.`;
         }
     }
+
 
     stepCounter.textContent =
         `Step ${index + 1} of ${totalSteps}`;
@@ -41,6 +69,7 @@ function updateStepInfo(step, index, totalSteps, frameCount) {
     navigationStep.textContent =
         `Step ${index + 1} of ${totalSteps}`;
 }
+
 
 function resetStepInfo() {
 
