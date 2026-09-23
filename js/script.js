@@ -69,7 +69,14 @@ simulateButton.addEventListener("click", function () {
         result =
             lru(referencePages, frameCount);
 
-    } else {
+    }
+
+    else if(algorithm==="optimal")
+    {
+        result=optimal(referencePages,frameCount);
+    }
+    
+    else {
 
         alert(
             algorithm.toUpperCase() +
@@ -216,6 +223,12 @@ function updatePrinciple(algorithm) {
 
         principleText.textContent =
             "When a page fault occurs and all frames are full, the page that has not been used for the longest time is removed.";
+    }
+
+    else if(algorithm==="optimal")
+    {
+        principleTitle.textContent="Optimal Principle";
+        principleText.textContent="When a page fault occurs and all frame sare full, the page whose next use is farthest in the future is replaced.";
     }
 }
 

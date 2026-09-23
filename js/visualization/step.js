@@ -60,6 +60,11 @@ function updateStepInfo(
             explanation.textContent =
                 `Page ${step.page} caused a page fault. LRU replaces the page that was least recently used.`;
         }
+
+        else if(algorithm==="optimal")
+        {
+            explanation.textContent=`Page ${step.page} caused a page fault. Optimal replaces whose next use is farthest in the future. `;
+        }
     }
 
 
