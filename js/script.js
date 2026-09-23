@@ -76,6 +76,11 @@ simulateButton.addEventListener("click", function () {
         result=optimal(referencePages,frameCount);
     }
     
+    else if(algorithm==="lfu")
+    {
+        result=lfu(referencePages,frameCount);
+    }
+
     else {
 
         alert(
@@ -229,6 +234,15 @@ function updatePrinciple(algorithm) {
     {
         principleTitle.textContent="Optimal Principle";
         principleText.textContent="When a page fault occurs and all frame sare full, the page whose next use is farthest in the future is replaced.";
+    }
+
+    else if (algorithm === "lfu") {
+
+        principleTitle.textContent =
+            "LFU Principle";
+
+        principleText.textContent =
+            "When a page fault occurs and all frames are full, the page with the lowest usage frequency is replaced. If frequencies are equal, the least recently used page is replaced.";
     }
 }
 
