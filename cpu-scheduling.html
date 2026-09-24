@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OS Lab | CPU Scheduling</title>
+<link rel="stylesheet" href="css/scheduling.css">
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <div class="brand-icon">⚙</div>
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html" class="active">CPU Scheduling</a>
+    </nav>
+
+    <div class="theme-toggle">☾ &nbsp; ◐</div>
+</header>
+
+<main>
+
+    <!-- TOP SECTION -->
+    <div class="top-grid">
+
+        <!-- LEFT: CONTROLS -->
+        <section class="card controls-card">
+
+            <div class="card-title">
+                <span>⚙</span>
+                <h2>Simulation Controls</h2>
+            </div>
+
+            <label>Scheduling Algorithm</label>
+
+            <select id="algorithm">
+                <option value="fcfs">FCFS (First Come First Serve)</option>
+                <option value="sjf">SJF (Shortest Job First)</option>
+                <option value="srtf">SRTF (Shortest Remaining Time First)</option>
+                <option value="priority">Priority Scheduling</option>
+                <option value="roundrobin">Round Robin</option>
+            </select>
+
+            <label>Number of Processes</label>
+
+            <input
+                type="number"
+                id="processCount"
+                min="1"
+                max="10"
+                value="4"
+            >
+
+            <h3 class="sub-heading">Process Details</h3>
+
+            <div class="process-table">
+
+                <div class="process-header">
+                    <span>Process ID</span>
+                    <span>Arrival Time (AT)</span>
+                    <span>Burst Time (BT)</span>
+                </div>
+
+                <!-- JS WILL GENERATE PROCESS ROWS HERE -->
+                <div id="processInputs"></div>
+
+            </div>
+
+            <!-- ROUND ROBIN QUANTUM -->
+            <div
+                id="quantumContainer"
+                class="quantum-container"
+                style="display:none;"
+            >
+                <label>Time Quantum</label>
+
+                <input
+                    type="number"
+                    id="timeQuantum"
+                    min="1"
+                    value="2"
+                >
+            </div>
+
+            <div class="buttons">
+
+                <button
+                    id="simulateBtn"
+                    class="simulate-btn"
+                >
+                    ▶ &nbsp; Simulate
+                </button>
+
+                <button
+                    id="resetBtn"
+                    class="reset-btn"
+                >
+                    ⟳ &nbsp; Reset
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- CENTER -->
+        <div class="center-column">
+
+            <!-- GANTT -->
+            <section class="card gantt-card">
+
+                <div class="card-title">
+                    <span>▥</span>
+                    <h2>Gantt Chart Visualization</h2>
+                </div>
+
+                <div id="ganttChart" class="gantt-chart">
+                    <canvas id="ganttCanvas"></canvas>
+                </div>
+
+            </section>
+
+
+            <!-- STEP EXECUTION -->
+            <section class="card step-card">
+
+                <div class="step-header">
+
+                    <div class="card-title">
+                        <span>▷</span>
+                        <h2>Step-by-Step Execution</h2>
+                    </div>
+
+                    <span id="stepCounter">
+                        Step 0 of 0
+                    </span>
+
+                </div>
+
+                <div class="step-info-grid">
+
+                    <div class="info-box current-process">
+                        <span>Current Process</span>
+                        <strong id="currentProcess">-</strong>
+                    </div>
+
+                    <div class="info-box">
+                        <span>Start Time</span>
+                        <strong id="startTime">-</strong>
+                    </div>
+
+                    <div class="info-box">
+                        <span>Completion Time</span>
+                        <strong id="completionTime">-</strong>
+                    </div>
+
+                    <div class="info-box">
+                        <span>Duration</span>
+                        <strong id="duration">-</strong>
+                    </div>
+
+                </div>
+
+                <div class="explanation">
+
+                    <h3>
+                        💡 &nbsp; Explanation
+                    </h3>
+
+                    <p id="explanationText">
+                        Click Simulate to start the visualization.
+                    </p>
+
+                </div>
+
+                <div class="navigation">
+
+                    <button
+                        id="previousBtn"
+                        disabled
+                    >
+                        ← Previous
+                    </button>
+
+                    <button
+                        id="nextBtn"
+                        disabled
+                    >
+                        Next →
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-column">
+
+            <!-- PRINCIPLE -->
+            <section class="card principle-card">
+
+                <div class="card-title">
+
+                    <span>▱</span>
+
+                    <h2>
+                        Algorithm Principle
+                    </h2>
+
+                </div>
+
+                <div class="principle-content">
+
+                    <h3 id="principleTitle">
+                        💡 FCFS (First Come First Serve)
+                    </h3>
+
+                    <p id="principleText">
+                        In FCFS, processes are executed in the
+                        order of their arrival. The process that
+                        arrives first is given the CPU first and
+                        runs until completion.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- TIMELINE -->
+            <section class="card timeline-card">
+
+                <div class="card-title">
+
+                    <span>◷</span>
+
+                    <h2>
+                        Execution Timeline
+                    </h2>
+
+                </div>
+
+                <div id="executionTimeline">
+
+                    <div class="empty-timeline">
+                        No execution yet
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- FORMULA CHEAT SHEET -->
+<section class="card formula-card">
+
+    <div class="card-title">
+        <span>📐</span>
+        <h2>Formula Cheat Sheet</h2>
+    </div>
+
+    <div class="formula-grid">
+
+        <div class="formula-item">
+            <strong>Completion Time (CT)</strong>
+            <span>Time at which process finishes</span>
+        </div>
+
+        <div class="formula-item">
+            <strong>Turnaround Time (TAT)</strong>
+            <span>CT − AT</span>
+        </div>
+
+        <div class="formula-item">
+            <strong>Waiting Time (WT)</strong>
+            <span>TAT − BT</span>
+        </div>
+
+        <div class="formula-item">
+            <strong>Response Time (RT)</strong>
+            <span>ST − AT</span>
+        </div>
+
+        <div class="formula-item">
+            <strong>Start Time (ST)</strong>
+            <span>First time process gets CPU</span>
+        </div>
+
+        <div class="formula-item">
+            <strong>Burst Time (BT)</strong>
+            <span>Total CPU execution time</span>
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- BOTTOM -->
+    <div class="bottom-grid">
+
+        <!-- PROCESS TABLE -->
+        <section class="card results-table-card">
+
+            <div class="card-title">
+
+                <span>▤</span>
+
+                <h2>
+                    Process Table
+                    <small>(with Calculated Values)</small>
+                </h2>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table id="resultsTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Process ID
+                            </th>
+
+                            <th>
+                                Arrival Time<br>(AT)
+                            </th>
+
+                            <th>
+                                Burst Time<br>(BT)
+                            </th>
+
+                            <th>
+                                Start Time<br>(ST)
+                            </th>
+
+                            <th>
+                                Completion Time<br>(CT)
+                            </th>
+
+                            <th>
+                                Turnaround Time<br>(TAT)
+                            </th>
+
+                            <th>
+                                Waiting Time<br>(WT)
+                            </th>
+
+                            <th>
+                                Response Time<br>(RT)
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="resultsBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTS -->
+        <section class="card metrics-card">
+
+            <div class="card-title">
+
+                <span>▥</span>
+
+                <h2>
+                    Results
+                </h2>
+
+            </div>
+
+            <div class="metrics-grid">
+
+                <div class="metric waiting">
+
+                    <span>⌛</span>
+
+                    <p>
+                        Average Waiting Time
+                    </p>
+
+                    <strong id="avgWaiting">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="metric turnaround">
+
+                    <span>⟳</span>
+
+                    <p>
+                        Average Turnaround Time
+                    </p>
+
+                    <strong id="avgTurnaround">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="metric response">
+
+                    <span>ϟ</span>
+
+                    <p>
+                        Average Response Time
+                    </p>
+
+                    <strong id="avgResponse">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="metric cpu">
+
+                    <span>▣</span>
+
+                    <p>
+                        Total CPU Time
+                    </p>
+
+                    <strong id="totalCpuTime">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 OS Lab | Built with HTML, CSS and JavaScript
+    </p>
+
+</footer>
+
+
+<!-- ALGORITHMS -->
+
+<script src="js/cpu/fcfs.js"></script>
+<script src="js/cpu-scheduling.js"></script>
+
+</body>
+</html>

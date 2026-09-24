@@ -1,197 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS Lab | Page Replacement Visualizer</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OS Lab | Operating System Visualizer</title>
+<link rel="stylesheet" href="css/landing.css">
 </head>
 
 <body>
 
 <header>
+
     <div class="logo-section">
-        <div class="logo-icon">▰</div>
-        <div class="logo-text">
-            <h1>OS Lab</h1>
-            <p>Page Replacement Visualizer</p>
+
+        <div class="logo-icon">
+            ⚙
         </div>
+
+        <div class="logo-text">
+
+            <h1>
+                OS <span>Lab</span>
+            </h1>
+
+            <p>
+                Visualize | Learn | Experiment
+            </p>
+
+        </div>
+
     </div>
+
 
     <nav>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Algorithms</a>
-        <a href="#">Guide</a>
+
+        <a href="landing.html" class="active">
+            Home
+        </a>
+
+        <a href="page-replacement.html">
+            Page Replacement
+        </a>
+
+        <a href="cpu-scheduling.html">
+            CPU Scheduling
+        </a>
+
     </nav>
+
 </header>
 
+
 <main>
-    <div class="dashboard">
 
-        <div class="left-panel">
+<!-- HERO -->
 
-            <section class="input-card">
-                <h3>⚙ &nbsp; Simulation Controls</h3>
+<section class="hero" id="home">
 
-                <div class="input-group">
-                    <label for="referenceString">Reference String</label>
-                    <input type="text" id="referenceString" placeholder="7 0 1 2 0 3 0 4">
-                </div>
+    <div class="hero-content">
 
-                <div class="input-group">
-                    <label for="frameCount">Number of Frames</label>
-                    <input type="number" id="frameCount" min="1" max="10" placeholder="3">
-                </div>
-
-                <div class="input-group">
-                    <label for="algorithm">Algorithm</label>
-                    <select id="algorithm">
-                        <option value="fifo">FIFO</option>
-                        <option value="lru">LRU</option>
-                        <option value="optimal">Optimal</option>
-                        <option value="lfu">LFU</option>
-                    </select>
-                </div>
-
-                <div class="control-buttons">
-                    <button id="simulateBtn">▷ &nbsp; Simulate</button>
-                    <button id="resetBtn">↻ &nbsp; Reset</button>
-                </div>
-            </section>
-
-            <section class="result-card" id="resultCard" style="display:none;">
-                <h3>▥ &nbsp; Final Results</h3>
-
-                <div class="results">
-                    <div class="result-box">
-                        <strong id="pageFaults">0</strong>
-                        <span>Page Faults</span>
-                    </div>
-
-                    <div class="result-box">
-                        <strong id="pageHits">0</strong>
-                        <span>Page Hits</span>
-                    </div>
-
-                    <div class="result-box">
-                        <strong id="hitRatio">0%</strong>
-                        <span>Hit Ratio</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="history-card">
-                <h3>◷ &nbsp; Step History</h3>
-
-                <table id="historyTable">
-                    <thead>
-                        <tr>
-                            <th>Step</th>
-                            <th>Page</th>
-                            <th>Frames</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyBody"></tbody>
-                </table>
-            </section>
-
+        <div class="badge">
+            OPERATING SYSTEM LAB
         </div>
 
-        <div class="right-panel">
+        <h2>
+            Understand Operating Systems
+            <span>Visually.</span>
+        </h2>
 
-            <section class="visualization-card">
+        <p>
+            Explore core Operating System concepts through
+            interactive simulations, step-by-step visualizations
+            and real-time algorithm execution.
+        </p>
 
-                <div class="visualization-header">
-                    <h3>▣ &nbsp; Visualization</h3>
+        <div class="hero-buttons">
+            <a href="#visualizers" class="primary-btn">
+                Explore Visualizers →
+            </a>
 
-                    <div class="speed-control">
-                        <span>Speed</span>
-                        <input type="range" id="speedControl" min="0.5" max="2" step="0.5" value="1">
-                        <span id="speedValue">1s</span>
-                    </div>
-                </div>
-
-                <div class="visualization-area">
-
-                    <div class="step-badge" id="stepCounter">
-                        Step 0 of 0
-                    </div>
-
-                    <div class="reference-section">
-                        <h4>Reference String</h4>
-                        <div id="referenceDisplay"></div>
-                    </div>
-
-                    <div class="canvas-container">
-                        <canvas id="memoryCanvas"></canvas>
-                    </div>
-
-                    <div class="step-info">
-
-                        <div class="info-box">
-                            <span>Current Page</span>
-                            <strong id="currentPage">-</strong>
-                        </div>
-
-                        <div class="info-box">
-                            <span>Result</span>
-                            <strong id="currentResult">-</strong>
-                        </div>
-
-                        <div class="info-box explanation-box">
-                            <span>Explanation</span>
-                            <p id="explanation">
-                                Click Simulate to start the visualization.
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="navigation">
-                    <button id="previousBtn" disabled>← Previous</button>
-                    <span id="navigationStep">Step 0 of 0</span>
-                    <button id="nextBtn" disabled>Next →</button>
-                </div>
-
-            </section>
-
-            <section class="principle-card">
-                <div class="principle-icon">💡</div>
-
-                <div>
-                    <h3 id="principleTitle">FIFO Principle</h3>
-                    <p id="principleText">
-                        When a page fault occurs and all frames are full,
-                        the page that has been in memory the longest
-                        (first in) is removed (first out).
-                    </p>
-                </div>
-            </section>
-
+            <a href="#about" class="secondary-btn">
+                Learn More
+            </a>
         </div>
+
     </div>
+
+    <div class="hero-visual">
+
+        <div class="terminal">
+
+            <div class="terminal-header">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="terminal-body">
+                <p><span class="purple">OS_LAB</span> $ start_visualizer</p>
+                <p>Loading Operating System concepts...</p>
+                <p class="success">✓ Page Replacement loaded</p>
+                <p class="success">✓ CPU Scheduling loaded</p>
+                <p class="yellow">→ Ready to simulate</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- VISUALIZERS -->
+
+<section class="visualizers" id="visualizers">
+
+    <div class="section-heading">
+
+        <span>EXPLORE</span>
+
+        <h2>Interactive Visualizers</h2>
+
+        <p>
+            Learn OS algorithms by seeing them execute
+            step-by-step.
+        </p>
+
+    </div>
+
+
+    <div class="visualizer-grid">
+
+        <!-- PAGE REPLACEMENT -->
+
+        <div class="visualizer-card">
+
+            <div class="card-icon purple-icon">
+                ▤
+            </div>
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    MEMORY MANAGEMENT
+                </span>
+
+                <h3>Page Replacement</h3>
+
+                <p>
+                    Visualize how operating systems manage
+                    memory using page replacement algorithms.
+                </p>
+
+                <div class="tags">
+                    <span>FIFO</span>
+                    <span>LRU</span>
+                    <span>Optimal</span>
+                    <span>LFU</span>
+                </div>
+
+                <a href="page-replacement.html" class="card-link">
+                    Open Visualizer →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CPU SCHEDULING -->
+
+        <div class="visualizer-card">
+
+            <div class="card-icon yellow-icon">
+                ▥
+            </div>
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    PROCESS MANAGEMENT
+                </span>
+
+                <h3>CPU Scheduling</h3>
+
+                <p>
+                    Understand how the CPU selects processes
+                    and manages execution over time.
+                </p>
+
+                <div class="tags">
+                    <span>FCFS</span>
+                    <span>SJF</span>
+                    <span>Priority</span>
+                    <span>Round Robin</span>
+                </div>
+
+                <a href="cpu-scheduling.html" class="card-link">
+                    Open Visualizer →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMING SOON -->
+
+        <div class="visualizer-card coming-soon">
+
+            <div class="card-icon green-icon">
+                ◈
+            </div>
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    DEADLOCK
+                </span>
+
+                <h3>Deadlock Detection</h3>
+
+                <p>
+                    Explore resource allocation and understand
+                    how deadlocks occur in operating systems.
+                </p>
+
+                <div class="tags">
+                    <span>Banker's</span>
+                    <span>RAG</span>
+                </div>
+
+                <span class="coming-label">
+                    COMING SOON
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEMORY ALLOCATION -->
+
+        <div class="visualizer-card coming-soon">
+
+            <div class="card-icon pink-icon">
+                ▦
+            </div>
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    MEMORY MANAGEMENT
+                </span>
+
+                <h3>Memory Allocation</h3>
+
+                <p>
+                    Visualize how memory is allocated to processes
+                    using different allocation strategies.
+                </p>
+
+                <div class="tags">
+                    <span>First Fit</span>
+                    <span>Best Fit</span>
+                    <span>Worst Fit</span>
+                </div>
+
+                <span class="coming-label">
+                    COMING SOON
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features" id="about">
+
+    <div class="section-heading">
+
+        <span>WHY OS LAB?</span>
+
+        <h2>Learn By Visualizing</h2>
+
+        <p>
+            Instead of only reading algorithms, watch them
+            execute step-by-step.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature">
+
+            <div class="feature-icon">▶</div>
+
+            <h3>Step-by-Step</h3>
+
+            <p>
+                Move through algorithm execution one step
+                at a time and understand every decision.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">▥</div>
+
+            <h3>Interactive</h3>
+
+            <p>
+                Enter your own input and experiment with
+                different algorithms and configurations.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">◈</div>
+
+            <h3>Visual Learning</h3>
+
+            <p>
+                See memory frames, processes, Gantt charts
+                and algorithm decisions visually.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">↗</div>
+
+            <h3>Compare Algorithms</h3>
+
+            <p>
+                Understand how different algorithms behave
+                using the same input.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- GUIDE -->
+
+<section class="guide" id="guide">
+
+    <div class="guide-content">
+
+        <span>START LEARNING</span>
+
+        <h2>
+            Ready to explore
+            Operating Systems?
+        </h2>
+
+        <p>
+            Choose a visualizer and start experimenting
+            with OS algorithms.
+        </p>
+
+        <a href="#visualizers" class="primary-btn">
+            Start Exploring →
+        </a>
+
+    </div>
+
+</section>
+
 </main>
 
+
 <footer>
-    <p>&copy; 2026 OS Lab | Built with HTML, CSS, and JavaScript</p>
+
+    <div class="footer-brand">
+        <strong>OS Lab</strong>
+        <span>Operating System Visualizer</span>
+    </div>
+
+    <p>
+        © 2026 OS Lab · Built for learning Operating Systems
+    </p>
+
 </footer>
 
-<script src="js/algorithms/fifo.js"></script>
-<script src="js/algorithms/lru.js"></script>
-<script src="js/algorithms/optimal.js"></script>
-<script src="js/algorithms/lfu.js"></script>
-
-<script src="js/visualization/canvas.js"></script>
-<script src="js/visualization/history.js"></script>
-<script src="js/visualization/reference.js"></script>
-<script src="js/visualization/results.js"></script>
-<script src="js/visualization/step.js"></script>
-
-<script src="js/script.js"></script>
 
 </body>
 </html>

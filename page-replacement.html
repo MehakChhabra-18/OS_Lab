@@ -1,0 +1,213 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>OS Lab | Page Replacement Visualizer</title> 
+    <link rel="stylesheet" href="css/style.css"> 
+</head> 
+ 
+<body> 
+ 
+<header>
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ⚙
+        </div>
+
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
+        </div>
+
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="page-replacement.html" class="active">
+            Page Replacement
+        </a>
+
+        <a href="cpu-scheduling.html">
+            CPU Scheduling
+        </a>
+
+    </nav>
+
+</header>
+ 
+<main> 
+    <div class="dashboard"> 
+ 
+        <div class="left-panel"> 
+ 
+            <section class="input-card"> 
+                <h3>⚙ &nbsp; Simulation Controls</h3> 
+ 
+                <div class="input-group"> 
+                    <label for="referenceString">Reference String</label> 
+                    <input type="text" id="referenceString" placeholder="7 0 1 2 0 3 0 4"> 
+                </div> 
+ 
+                <div class="input-group"> 
+                    <label for="frameCount">Number of Frames</label> 
+                    <input type="number" id="frameCount" min="1" max="10" placeholder="3"> 
+                </div> 
+ 
+                <div class="input-group"> 
+                    <label for="algorithm">Algorithm</label> 
+                    <select id="algorithm"> 
+                        <option value="fifo">FIFO</option> 
+                        <option value="lru">LRU</option> 
+                        <option value="optimal">Optimal</option> 
+                        <option value="lfu">LFU</option> 
+                    </select> 
+                </div> 
+ 
+                <div class="control-buttons"> 
+                    <button id="simulateBtn">▷ &nbsp; Simulate</button> 
+                    <button id="resetBtn">↻ &nbsp; Reset</button> 
+                </div> 
+            </section> 
+ 
+            <section class="result-card" id="resultCard" style="display:none;"> 
+                <h3>▥ &nbsp; Final Results</h3> 
+ 
+                <div class="results"> 
+                    <div class="result-box"> 
+                        <strong id="pageFaults">0</strong> 
+                        <span>Page Faults</span> 
+                    </div> 
+ 
+                    <div class="result-box"> 
+                        <strong id="pageHits">0</strong> 
+                        <span>Page Hits</span> 
+                    </div> 
+ 
+                    <div class="result-box"> 
+                        <strong id="hitRatio">0%</strong> 
+                        <span>Hit Ratio</span> 
+                    </div> 
+                </div> 
+            </section> 
+ 
+            <section class="history-card"> 
+                <h3>◷ &nbsp; Step History</h3> 
+ 
+                <table id="historyTable"> 
+                    <thead> 
+                        <tr> 
+                            <th>Step</th> 
+                            <th>Page</th> 
+                            <th>Frames</th> 
+                            <th>Result</th> 
+                        </tr> 
+                    </thead> 
+                    <tbody id="historyBody"></tbody> 
+                </table> 
+            </section> 
+ 
+        </div> 
+ 
+        <div class="right-panel"> 
+ 
+            <section class="visualization-card"> 
+ 
+                <div class="visualization-header"> 
+                    <h3>▣ &nbsp; Visualization</h3> 
+ 
+                    <div class="speed-control"> 
+                        <span>Speed</span> 
+                        <input type="range" id="speedControl" min="0.5" max="2" step="0.5" value="1"> 
+                        <span id="speedValue">1s</span> 
+                    </div> 
+                </div> 
+ 
+                <div class="visualization-area"> 
+ 
+                    <div class="step-badge" id="stepCounter"> 
+                        Step 0 of 0 
+                    </div> 
+ 
+                    <div class="reference-section"> 
+                        <h4>Reference String</h4> 
+                        <div id="referenceDisplay"></div> 
+                    </div> 
+ 
+                    <div class="canvas-container"> 
+                        <canvas id="memoryCanvas"></canvas> 
+                    </div> 
+ 
+                    <div class="step-info"> 
+ 
+                        <div class="info-box"> 
+                            <span>Current Page</span> 
+                            <strong id="currentPage">-</strong> 
+                        </div> 
+ 
+                        <div class="info-box"> 
+                            <span>Result</span> 
+                            <strong id="currentResult">-</strong> 
+                        </div> 
+ 
+                        <div class="info-box explanation-box"> 
+                            <span>Explanation</span> 
+                            <p id="explanation"> 
+                                Click Simulate to start the visualization. 
+                            </p> 
+                        </div> 
+ 
+                    </div> 
+ 
+                </div> 
+ 
+                <div class="navigation"> 
+                    <button id="previousBtn" disabled>← Previous</button> 
+                    <span id="navigationStep">Step 0 of 0</span> 
+                    <button id="nextBtn" disabled>Next →</button> 
+                </div> 
+ 
+            </section> 
+ 
+            <section class="principle-card"> 
+                <div class="principle-icon">💡</div> 
+ 
+                <div> 
+                    <h3 id="principleTitle">FIFO Principle</h3> 
+                    <p id="principleText"> 
+                        When a page fault occurs and all frames are full, 
+                        the page that has been in memory the longest 
+                        (first in) is removed (first out). 
+                    </p> 
+                </div> 
+            </section> 
+ 
+        </div> 
+    </div> 
+</main> 
+ 
+<footer> 
+    <p>&copy; 2026 OS Lab | Built with HTML, CSS, and JavaScript</p> 
+</footer> 
+ 
+<script src="js/algorithms/fifo.js"></script> 
+<script src="js/algorithms/lru.js"></script> 
+<script src="js/algorithms/optimal.js"></script> 
+<script src="js/algorithms/lfu.js"></script> 
+ 
+<script src="js/visualization/canvas.js"></script> 
+<script src="js/visualization/history.js"></script> 
+<script src="js/visualization/reference.js"></script> 
+<script src="js/visualization/results.js"></script> 
+<script src="js/visualization/step.js"></script> 
+ 
+<script src="js/script.js"></script> 
+ 
+</body> 
+</html>
