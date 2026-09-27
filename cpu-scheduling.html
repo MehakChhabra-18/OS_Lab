@@ -145,6 +145,88 @@
 
                 </div>
 
+                <!-- ROUND ROBIN TWO-QUEUE VISUALIZATION (Visible only during Round Robin simulation) -->
+              <!-- ROUND ROBIN VISUALIZATION -->
+             <div id="rrQueueContainer" class="rr-queue-container" style="display:none;">
+
+                    <!-- TOP INFO -->
+                    <div class="rr-header-badges">
+
+                        <span class="rr-badge rr-badge-quantum">
+                            Time Quantum:
+                            <strong id="rrQuantumVal">2</strong>
+                        </span>
+
+                        <span class="rr-badge rr-badge-time">
+                            Current Time:
+                            <strong id="rrCurrentTimeVal">0</strong>
+                        </span>
+
+                    </div>
+
+
+                    <!-- QUEUE AREA -->
+                    <div class="rr-visual-area">
+
+                        <!-- CPU -->
+                        <div class="rr-cpu-section">
+
+                            <div class="rr-section-title">
+                                ⚡ CPU / RUNNING
+                            </div>
+
+                            <div id="rrCpuProcess" class="rr-cpu-content">
+
+                                <div class="rr-empty-label">
+                                    CPU Idle
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- READY QUEUE -->
+                        <div class="rr-ready-section">
+
+                            <div class="rr-section-title">
+
+                                <span>
+                                    📋 READY QUEUE
+                                </span>
+
+                                <span class="rr-queue-direction">
+                                    FRONT → REAR
+                                </span>
+
+                            </div>
+
+
+                            <div id="rrReadyQueue" class="rr-ready-queue">
+
+                                <div class="rr-empty-label">
+                                    Queue Empty
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PROCESS STATUS -->
+                    <div class="rr-status-section">
+
+                        <div class="rr-status-title">
+                            Process Status
+                        </div>
+
+                        <div id="rrProcessStatuses" class="rr-status-chips"></div>
+
+                    </div>
+
+                </div>
                 <div class="step-info-grid">
 
                     <div class="info-box current-process">
@@ -473,8 +555,19 @@
 
 
 <!-- ALGORITHMS -->
-
 <script src="js/cpu/fcfs.js"></script>
+<script src="js/cpu/sjf.js"></script>
+<script src="js/cpu/srtf.js"></script>
+<script src="js/cpu/priority.js"></script>
+<script src="js/cpu/roundrobin.js"></script>
+
+<!-- VISUALIZATIONS -->
+<script src="js/visualization/gantt.js"></script>
+<script src="js/visualization/timeline.js"></script>
+<script src="js/visualization/step-execution.js"></script>
+<script src="js/visualization/results.js"></script>
+
+<!-- CONTROLLER -->
 <script src="js/cpu-scheduling.js"></script>
 
 </body>

@@ -188,6 +188,11 @@ input:focus{
     align-items:center;
 }
 
+.process-header.has-priority,
+.process-row.has-priority{
+    grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;
+}
+
 .process-header{
     background:#182341;
     color:#dce3ff;
@@ -698,4 +703,421 @@ footer{
         grid-template-columns:1fr;
     }
 
+}
+
+/* =========================================================
+   ROUND ROBIN STEP VISUALIZATION
+   ========================================================= */
+
+.rr-simulation{
+    width:100%;
+    padding:20px;
+    border:1px solid #293d68;
+    border-radius:12px;
+    background:#0d1830;
+}
+
+/* ---------- TOP INFO ---------- */
+
+.rr-top-info{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+}
+
+.rr-badge{
+    padding:9px 18px;
+    border-radius:22px;
+    font-size:16px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.rr-quantum{
+    color:#ffc83d;
+    border:1px solid #ffc83d;
+    background:#ffc83d12;
+}
+
+.rr-time{
+    color:#69a3ff;
+    border:1px solid #4285ff;
+    background:#4285ff12;
+}
+
+
+/* ---------- MAIN SIMULATION AREA ---------- */
+
+.rr-main{
+    display:grid;
+    grid-template-columns:260px minmax(0,1fr);
+    gap:18px;
+    align-items:stretch;
+}
+
+
+/* ---------- CPU ---------- */
+
+.rr-cpu{
+    min-height:155px;
+    padding:16px;
+    border:1px solid #4f46e5;
+    border-radius:12px;
+    background:#101d38;
+}
+
+.rr-section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    color:#f1f5ff;
+    font-size:17px;
+    font-weight:700;
+
+    padding-bottom:12px;
+    border-bottom:1px solid #24365d;
+}
+
+.rr-cpu-icon{
+    color:#ffc83d;
+    font-size:19px;
+}
+
+.rr-running{
+    margin-top:16px;
+    min-height:85px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #ffc83d;
+    border-radius:9px;
+
+    background:#182746;
+    box-shadow:0 0 20px rgba(255,200,61,.12);
+}
+
+.rr-running-id{
+    font-size:24px;
+    font-weight:800;
+    color:#ffffff;
+}
+
+.rr-running-details{
+    margin-top:4px;
+    color:#b9c7e8;
+    font-size:13px;
+}
+
+.rr-running-details strong{
+    color:#ffc83d;
+}
+
+.rr-idle{
+    min-height:85px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#7f91ba;
+    font-style:italic;
+}
+
+
+/* ---------- READY QUEUE ---------- */
+
+.rr-queue{
+    min-width:0;
+    padding:16px;
+
+    border:1px solid #293f70;
+    border-radius:12px;
+
+    background:#101d38;
+}
+
+.rr-queue-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding-bottom:12px;
+    border-bottom:1px solid #24365d;
+}
+
+.rr-queue-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    color:#f1f5ff;
+    font-size:17px;
+    font-weight:700;
+}
+
+.rr-queue-direction{
+    color:#8294c1;
+    font-size:12px;
+}
+
+
+/* ---------- QUEUE ITEMS ---------- */
+
+.rr-queue-track{
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    min-height:105px;
+    margin-top:14px;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    padding:4px 2px 10px;
+}
+
+.rr-queue-track::-webkit-scrollbar{
+    height:6px;
+}
+
+.rr-queue-track::-webkit-scrollbar-track{
+    background:#111d34;
+    border-radius:10px;
+}
+
+.rr-queue-track::-webkit-scrollbar-thumb{
+    background:#334d82;
+    border-radius:10px;
+}
+
+
+/* Individual process */
+
+.rr-queue-item{
+    position:relative;
+
+    flex:0 0 135px;
+    min-height:78px;
+
+    padding:11px 12px;
+
+    border:1px solid #3b568e;
+    border-radius:9px;
+
+    background:#152542;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    transition:.25s;
+}
+
+.rr-queue-item:hover{
+    border-color:#6366f1;
+    transform:translateY(-2px);
+}
+
+.rr-queue-item.current{
+    border-color:#ffc83d;
+    box-shadow:0 0 15px rgba(255,200,61,.15);
+}
+
+.rr-process-id{
+    color:#ffffff;
+    font-size:17px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.rr-process-info{
+    color:#aebde0;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.rr-process-info strong{
+    color:#ffc83d;
+}
+
+
+/* Arrow between queue elements */
+
+.rr-queue-arrow{
+    flex:0 0 auto;
+
+    color:#627aa9;
+    font-size:20px;
+}
+
+
+/* Empty queue */
+
+.rr-empty{
+    width:100%;
+    min-height:75px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#7789b3;
+    font-size:14px;
+    font-style:italic;
+}
+
+
+/* ---------- PROCESS STATUS ---------- */
+
+.rr-status{
+    margin-top:18px;
+    padding-top:16px;
+
+    border-top:1px solid #24365d;
+}
+
+.rr-status-title{
+    color:#aebde0;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.rr-status-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.rr-status-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    padding:6px 10px;
+
+    border:1px solid #314b7c;
+    border-radius:7px;
+
+    background:#111f39;
+
+    color:#d7e0f5;
+    font-size:13px;
+}
+
+.rr-status-item .status-id{
+    color:#ffffff;
+    font-weight:700;
+}
+
+.rr-status-item .status-badge{
+    padding:2px 6px;
+    border-radius:4px;
+
+    background:#393b79;
+    color:#c9c8ff;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+.rr-status-item .remaining{
+    color:#aebde0;
+}
+
+.rr-status-item.running{
+    border-color:#ffc83d;
+}
+
+.rr-status-item.running .status-badge{
+    background:#ffc83d;
+    color:#10182b;
+}
+
+.rr-status-item.completed{
+    border-color:#34d399;
+}
+
+.rr-status-item.completed .status-badge{
+    background:#34d399;
+    color:#071b16;
+}
+
+
+/* =========================================================
+   STEP CARD
+   ========================================================= */
+
+.step-card{
+    overflow:hidden;
+}
+
+.step-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+#stepCounter{
+    color:#aebde0;
+    font-size:15px;
+    font-weight:600;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:900px){
+
+    .rr-main{
+        grid-template-columns:1fr;
+    }
+
+    .rr-cpu{
+        min-height:auto;
+    }
+
+    .rr-running{
+        min-height:75px;
+    }
+}
+
+
+@media(max-width:600px){
+
+    .rr-simulation{
+        padding:14px;
+    }
+
+    .rr-top-info{
+        flex-wrap:wrap;
+    }
+
+    .rr-main{
+        gap:12px;
+    }
+
+    .rr-queue-track{
+        gap:10px;
+    }
+
+    .rr-queue-item{
+        flex-basis:120px;
+    }
+
+    .rr-status-list{
+        gap:6px;
+    }
+
+    .rr-status-item{
+        font-size:12px;
+    }
 }

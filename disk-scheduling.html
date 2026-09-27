@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OS Lab | Disk Scheduling</title>
+
+    <link rel="stylesheet" href="css/disk-scheduling.css">
+</head>
+
+<body>
+
+<header>
+
+    <!-- BRAND -->
+    <div class="brand">
+
+        <div class="brand-icon">
+            ⚙
+        </div>
+
+        <div>
+            <h1>
+                OS <span>Lab</span>
+            </h1>
+
+            <p>
+                Visualize | Learn | Experiment
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+    <nav>
+
+        <a href="page-replacement.html">
+            Page Replacement
+        </a>
+
+        <a href="cpu-scheduling.html">
+            CPU Scheduling
+        </a>
+
+        <a href="disk-scheduling.html"
+           class="active">
+            Disk Scheduling
+        </a>
+
+    </nav>
+
+
+    <!-- THEME -->
+    <div class="theme-toggle">
+        ☾ &nbsp; ◐
+    </div>
+
+</header>
+
+
+<main>
+
+    <!-- =========================================
+         TOP GRID
+         ========================================= -->
+
+    <div class="top-grid">
+
+
+        <!-- =====================================
+             LEFT : SIMULATION CONTROLS
+             ===================================== -->
+
+        <section class="card controls-card">
+
+            <div class="card-title">
+
+                <span>⚙</span>
+
+                <h2>
+                    Simulation Controls
+                </h2>
+
+            </div>
+
+
+            <!-- ALGORITHM -->
+
+            <label for="diskAlgorithm">
+                Disk Scheduling Algorithm
+            </label>
+
+            <select id="diskAlgorithm">
+
+                <option value="fcfs">
+                    FCFS (First Come First Serve)
+                </option>
+
+                <option value="sstf">
+                    SSTF (Shortest Seek Time First)
+                </option>
+
+                <option value="scan">
+                    SCAN
+                </option>
+
+                <option value="cscan">
+                    C-SCAN
+                </option>
+
+                <option value="look">
+                    LOOK
+                </option>
+
+                <option value="clook">
+                    C-LOOK
+                </option>
+
+            </select>
+
+
+            <!-- DISK SIZE -->
+
+            <label for="diskSize">
+                Disk Size
+            </label>
+
+            <input
+                type="number"
+                id="diskSize"
+                min="1"
+                value="200"
+            >
+
+
+            <!-- INITIAL HEAD -->
+
+            <label for="initialHead">
+                Initial Head Position
+            </label>
+
+            <input
+                type="number"
+                id="initialHead"
+                min="0"
+                value="50"
+            >
+
+
+            <!-- REQUEST QUEUE -->
+
+            <label for="diskRequests">
+                Request Queue
+            </label>
+
+            <input
+                type="text"
+                id="diskRequests"
+                value="82, 170, 43, 140, 24, 16, 190"
+                placeholder="e.g. 82, 170, 43, 140"
+            >
+
+            <small class="input-hint">
+                Enter disk requests separated by commas
+            </small>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    id="simulateBtn"
+                    class="simulate-btn"
+                >
+                    ▶ &nbsp; Simulate
+                </button>
+
+
+                <button
+                    id="resetBtn"
+                    class="reset-btn"
+                >
+                    ⟳ &nbsp; Reset
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             CENTER : VISUALIZATION
+             ===================================== -->
+
+        <div class="center-column">
+
+
+            <!-- DISK VISUALIZATION -->
+
+            <section class="card disk-card">
+
+                <div class="card-title">
+
+                    <span>◉</span>
+
+                    <h2>
+                        Disk Visualization
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="diskVisualization"
+                    class="disk-visualization"
+                >
+
+                    <div class="empty-disk">
+
+                        <p>
+                            Run simulation to visualize
+                            disk head movement
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- STEP-BY-STEP -->
+
+            <section class="card step-card">
+
+                <div class="step-header">
+
+                    <div class="card-title">
+
+                        <span>▷</span>
+
+                        <h2>
+                            Step-by-Step Execution
+                        </h2>
+
+                    </div>
+
+
+                    <span id="stepCounter">
+                        Step 0 of 0
+                    </span>
+
+                </div>
+
+
+
+                <!-- CURRENT STEP INFO -->
+
+                <div class="step-info-grid">
+
+
+                    <div class="info-box current-position">
+
+                        <span>
+                            Current Head
+                        </span>
+
+                        <strong id="currentHead">
+                            -
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Next Request
+                        </span>
+
+                        <strong id="nextRequest">
+                            -
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Head Movement
+                        </span>
+
+                        <strong id="currentMovement">
+                            -
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Total Seek
+                        </span>
+
+                        <strong id="currentTotalSeek">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- EXPLANATION -->
+
+                <div class="explanation">
+
+                    <h3>
+                        💡 &nbsp; Explanation
+                    </h3>
+
+                    <p id="explanationText">
+
+                        Click Simulate to start
+                        the visualization.
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- NAVIGATION -->
+
+                <div class="navigation">
+
+                    <button
+                        id="previousBtn"
+                        disabled
+                    >
+                        ← Previous
+                    </button>
+
+
+                    <button
+                        id="nextBtn"
+                        disabled
+                    >
+                        Next →
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =====================================
+             RIGHT COLUMN
+             ===================================== -->
+
+        <div class="right-column">
+
+
+            <!-- ALGORITHM PRINCIPLE -->
+
+            <section class="card principle-card">
+
+                <div class="card-title">
+
+                    <span>▱</span>
+
+                    <h2>
+                        Algorithm Principle
+                    </h2>
+
+                </div>
+
+
+                <div class="principle-content">
+
+                    <h3 id="principleTitle">
+
+                        💡 FCFS
+
+                    </h3>
+
+
+                    <p id="principleText">
+
+                        In FCFS disk scheduling,
+                        disk requests are served in
+                        the same order in which they
+                        arrive.
+
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SEEK SEQUENCE -->
+
+            <section class="card sequence-card">
+
+                <div class="card-title">
+
+                    <span>→</span>
+
+                    <h2>
+                        Seek Sequence
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="seekSequence"
+                    class="seek-sequence"
+                >
+
+                    -
+
+                </div>
+
+            </section>
+
+
+
+            <!-- EXECUTION TIMELINE -->
+
+            <section class="card timeline-card">
+
+                <div class="card-title">
+
+                    <span>◷</span>
+
+                    <h2>
+                        Execution Timeline
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="executionTimeline"
+                    class="execution-timeline"
+                >
+
+                    <div class="empty-timeline">
+
+                        No execution yet
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         BOTTOM GRID
+         ========================================= -->
+
+    <div class="bottom-grid">
+
+
+        <!-- =====================================
+             SEEK CALCULATION TABLE
+             ===================================== -->
+
+        <section class="card results-table-card">
+
+            <div class="card-title">
+
+                <span>▤</span>
+
+                <h2>
+                    Seek Calculation
+                </h2>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table id="seekTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Step
+                            </th>
+
+                            <th>
+                                From
+                            </th>
+
+                            <th>
+                                To
+                            </th>
+
+                            <th>
+                                Movement
+                            </th>
+
+                            <th>
+                                Total Seek
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="seekTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             RESULTS
+             ===================================== -->
+
+        <section class="card metrics-card">
+
+            <div class="card-title">
+
+                <span>▥</span>
+
+                <h2>
+                    Results
+                </h2>
+
+            </div>
+
+
+            <div class="metrics-grid">
+
+
+                <div class="metric waiting">
+
+                    <span>
+                        ↔
+                    </span>
+
+                    <p>
+                        Total Seek Time
+                    </p>
+
+                    <strong id="totalSeekTime">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="metric turnaround">
+
+                    <span>
+                        ∿
+                    </span>
+
+                    <p>
+                        Average Seek Time
+                    </p>
+
+                    <strong id="averageSeekTime">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="metric response">
+
+                    <span>
+                        #
+                    </span>
+
+                    <p>
+                        Total Requests
+                    </p>
+
+                    <strong id="requestCount">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="metric cpu">
+
+                    <span>
+                        ●
+                    </span>
+
+                    <p>
+                        Current Head
+                    </p>
+
+                    <strong id="resultCurrentHead">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================
+     FOOTER
+     ========================================= -->
+
+<footer>
+
+    <p>
+        © 2026 OS Lab |
+        Built with HTML, CSS and JavaScript
+    </p>
+
+</footer>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+     ========================================= -->
+
+<script src="js/disk/fcfs.js"></script>
+
+<script src="js/disk-scheduling.js"></script>
+
+</body>
+
+</html>
