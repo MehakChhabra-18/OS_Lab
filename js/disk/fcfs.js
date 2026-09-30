@@ -1,40 +1,70 @@
-function fcfsDiskScheduling(initialHead, requests) {
+/*
+    =========================================================
+    FCFS DISK SCHEDULING
+    =========================================================
 
-    const sequence = [initialHead, ...requests];
+    Input:
+        initialHead
+        requests[]
+
+    Output:
+        {
+            order: [],
+            movements: [],
+            totalSeek: number
+        }
+*/
+
+
+function fcfs(initialHead, requests) {
+
+    const order = [...requests];
 
     const movements = [];
-    let totalSeekTime = 0;
 
-    for (let i = 0; i < sequence.length - 1; i++) {
+    let currentHead = initialHead;
 
-        const from = sequence[i];
-        const to = sequence[i + 1];
+    let totalSeek = 0;
 
-        const movement = Math.abs(to - from);
 
-        totalSeekTime += movement;
+    for (let i = 0; i < order.length; i++) {
+
+        const nextHead = order[i];
+
+        const distance = Math.abs(
+            nextHead - currentHead
+        );
+
+
+        totalSeek += distance;
+
 
         movements.push({
-            step: i + 1,
-            from: from,
-            to: to,
-            movement: movement,
-            totalSeekTime: totalSeekTime
+
+            from: currentHead,
+
+            to: nextHead,
+
+            distance: distance,
+
+            request: nextHead,
+
+            step: i + 1
+
         });
+
+
+        currentHead = nextHead;
     }
 
-    const averageSeekTime =
-        requests.length > 0
-            ? totalSeekTime / requests.length
-            : 0;
 
     return {
-        algorithm: "FCFS",
-        initialHead: initialHead,
-        requests: [...requests],
-        sequence: sequence,
+
+        order: order,
+
         movements: movements,
-        totalSeekTime: totalSeekTime,
-        averageSeekTime: averageSeekTime
+
+        totalSeek: totalSeek
+
     };
 }

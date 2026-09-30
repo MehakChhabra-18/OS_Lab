@@ -12,50 +12,27 @@
 
 <body>
 
-<header>
+<header class="header">
 
-    <!-- BRAND -->
     <div class="brand">
-
-        <div class="brand-icon">
-            ⚙
-        </div>
+        <div class="brand-icon">⚙</div>
 
         <div>
-            <h1>
-                OS <span>Lab</span>
-            </h1>
-
-            <p>
-                Visualize | Learn | Experiment
-            </p>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
         </div>
-
     </div>
 
-
-    <!-- NAVIGATION -->
     <nav>
-
-        <a href="page-replacement.html">
-            Page Replacement
-        </a>
-
-        <a href="cpu-scheduling.html">
-            CPU Scheduling
-        </a>
-
-        <a href="disk-scheduling.html"
-           class="active">
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html" class="active">
             Disk Scheduling
         </a>
-
     </nav>
 
-
-    <!-- THEME -->
     <div class="theme-toggle">
-        ☾ &nbsp; ◐
+        ☾
     </div>
 
 </header>
@@ -63,614 +40,378 @@
 
 <main>
 
-    <!-- =========================================
-         TOP GRID
-         ========================================= -->
+    <!-- ================= CONTROLS ================= -->
 
-    <div class="top-grid">
+    <section class="card controls-card">
+
+        <div class="card-title">
+            <span>⚙</span>
+            <h2>Simulation Controls</h2>
+        </div>
+
+        <div class="controls-grid">
+
+            <div class="control-group">
+
+                <label for="algorithm">
+                    Disk Scheduling Algorithm
+                </label>
+
+                <select id="algorithm">
+
+                    <option value="fcfs">
+                        FCFS (First Come First Serve)
+                    </option>
+
+                    <option value="sstf">
+                        SSTF (Shortest Seek Time First)
+                    </option>
+
+                    <option value="scan">
+                        SCAN
+                    </option>
+
+                    <option value="cscan">
+                        C-SCAN
+                    </option>
+
+                    <option value="look">
+                        LOOK
+                    </option>
+
+                    <option value="clook">
+                        C-LOOK
+                    </option>
+
+                </select>
+
+            </div>
 
 
-        <!-- =====================================
-             LEFT : SIMULATION CONTROLS
-             ===================================== -->
+            <div class="control-group">
 
-        <section class="card controls-card">
+                <label for="initialHead">
+                    Initial Head Position
+                </label>
 
-            <div class="card-title">
-
-                <span>⚙</span>
-
-                <h2>
-                    Simulation Controls
-                </h2>
+                <input
+                    type="number"
+                    id="initialHead"
+                    min="0"
+                    max="199"
+                    value="53"
+                >
 
             </div>
 
 
-            <!-- ALGORITHM -->
+            <div class="control-group full-width">
 
-            <label for="diskAlgorithm">
-                Disk Scheduling Algorithm
-            </label>
+                <label for="requestQueue">
+                    Disk Request Queue
+                </label>
 
-            <select id="diskAlgorithm">
-
-                <option value="fcfs">
-                    FCFS (First Come First Serve)
-                </option>
-
-                <option value="sstf">
-                    SSTF (Shortest Seek Time First)
-                </option>
-
-                <option value="scan">
-                    SCAN
-                </option>
-
-                <option value="cscan">
-                    C-SCAN
-                </option>
-
-                <option value="look">
-                    LOOK
-                </option>
-
-                <option value="clook">
-                    C-LOOK
-                </option>
-
-            </select>
-
-
-            <!-- DISK SIZE -->
-
-            <label for="diskSize">
-                Disk Size
-            </label>
-
-            <input
-                type="number"
-                id="diskSize"
-                min="1"
-                value="200"
-            >
-
-
-            <!-- INITIAL HEAD -->
-
-            <label for="initialHead">
-                Initial Head Position
-            </label>
-
-            <input
-                type="number"
-                id="initialHead"
-                min="0"
-                value="50"
-            >
-
-
-            <!-- REQUEST QUEUE -->
-
-            <label for="diskRequests">
-                Request Queue
-            </label>
-
-            <input
-                type="text"
-                id="diskRequests"
-                value="82, 170, 43, 140, 24, 16, 190"
-                placeholder="e.g. 82, 170, 43, 140"
-            >
-
-            <small class="input-hint">
-                Enter disk requests separated by commas
-            </small>
-
-
-            <!-- BUTTONS -->
-
-            <div class="buttons">
-
-                <button
-                    id="simulateBtn"
-                    class="simulate-btn"
+                <input
+                    type="text"
+                    id="requestQueue"
+                    value="98, 183, 37, 122, 14, 124, 65, 67"
+                    placeholder="Example: 98, 183, 37, 122, 14"
                 >
-                    ▶ &nbsp; Simulate
-                </button>
 
-
-                <button
-                    id="resetBtn"
-                    class="reset-btn"
-                >
-                    ⟳ &nbsp; Reset
-                </button>
+                <small>
+                    Enter requests separated by commas
+                </small>
 
             </div>
-
-        </section>
-
-
-
-        <!-- =====================================
-             CENTER : VISUALIZATION
-             ===================================== -->
-
-        <div class="center-column">
-
-
-            <!-- DISK VISUALIZATION -->
-
-            <section class="card disk-card">
-
-                <div class="card-title">
-
-                    <span>◉</span>
-
-                    <h2>
-                        Disk Visualization
-                    </h2>
-
-                </div>
-
-
-                <div
-                    id="diskVisualization"
-                    class="disk-visualization"
-                >
-
-                    <div class="empty-disk">
-
-                        <p>
-                            Run simulation to visualize
-                            disk head movement
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- STEP-BY-STEP -->
-
-            <section class="card step-card">
-
-                <div class="step-header">
-
-                    <div class="card-title">
-
-                        <span>▷</span>
-
-                        <h2>
-                            Step-by-Step Execution
-                        </h2>
-
-                    </div>
-
-
-                    <span id="stepCounter">
-                        Step 0 of 0
-                    </span>
-
-                </div>
-
-
-
-                <!-- CURRENT STEP INFO -->
-
-                <div class="step-info-grid">
-
-
-                    <div class="info-box current-position">
-
-                        <span>
-                            Current Head
-                        </span>
-
-                        <strong id="currentHead">
-                            -
-                        </strong>
-
-                    </div>
-
-
-
-                    <div class="info-box">
-
-                        <span>
-                            Next Request
-                        </span>
-
-                        <strong id="nextRequest">
-                            -
-                        </strong>
-
-                    </div>
-
-
-
-                    <div class="info-box">
-
-                        <span>
-                            Head Movement
-                        </span>
-
-                        <strong id="currentMovement">
-                            -
-                        </strong>
-
-                    </div>
-
-
-
-                    <div class="info-box">
-
-                        <span>
-                            Total Seek
-                        </span>
-
-                        <strong id="currentTotalSeek">
-                            -
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- EXPLANATION -->
-
-                <div class="explanation">
-
-                    <h3>
-                        💡 &nbsp; Explanation
-                    </h3>
-
-                    <p id="explanationText">
-
-                        Click Simulate to start
-                        the visualization.
-
-                    </p>
-
-                </div>
-
-
-
-                <!-- NAVIGATION -->
-
-                <div class="navigation">
-
-                    <button
-                        id="previousBtn"
-                        disabled
-                    >
-                        ← Previous
-                    </button>
-
-
-                    <button
-                        id="nextBtn"
-                        disabled
-                    >
-                        Next →
-                    </button>
-
-                </div>
-
-            </section>
 
         </div>
 
 
+        <div class="buttons">
 
-        <!-- =====================================
-             RIGHT COLUMN
-             ===================================== -->
+            <button
+                id="simulateBtn"
+                class="simulate-btn"
+                type="button"
+            >
+                ▶ &nbsp; Simulate
+            </button>
 
-        <div class="right-column">
-
-
-            <!-- ALGORITHM PRINCIPLE -->
-
-            <section class="card principle-card">
-
-                <div class="card-title">
-
-                    <span>▱</span>
-
-                    <h2>
-                        Algorithm Principle
-                    </h2>
-
-                </div>
-
-
-                <div class="principle-content">
-
-                    <h3 id="principleTitle">
-
-                        💡 FCFS
-
-                    </h3>
-
-
-                    <p id="principleText">
-
-                        In FCFS disk scheduling,
-                        disk requests are served in
-                        the same order in which they
-                        arrive.
-
-                    </p>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- SEEK SEQUENCE -->
-
-            <section class="card sequence-card">
-
-                <div class="card-title">
-
-                    <span>→</span>
-
-                    <h2>
-                        Seek Sequence
-                    </h2>
-
-                </div>
-
-
-                <div
-                    id="seekSequence"
-                    class="seek-sequence"
-                >
-
-                    -
-
-                </div>
-
-            </section>
-
-
-
-            <!-- EXECUTION TIMELINE -->
-
-            <section class="card timeline-card">
-
-                <div class="card-title">
-
-                    <span>◷</span>
-
-                    <h2>
-                        Execution Timeline
-                    </h2>
-
-                </div>
-
-
-                <div
-                    id="executionTimeline"
-                    class="execution-timeline"
-                >
-
-                    <div class="empty-timeline">
-
-                        No execution yet
-
-                    </div>
-
-                </div>
-
-            </section>
+            <button
+                id="resetBtn"
+                class="reset-btn"
+                type="button"
+            >
+                ⟳ &nbsp; Reset
+            </button>
 
         </div>
 
-    </div>
+    </section>
 
 
+    <!-- ================= VISUALIZATION ================= -->
 
-    <!-- =========================================
-         BOTTOM GRID
-         ========================================= -->
+    <section class="card visualization-card">
 
-    <div class="bottom-grid">
+        <div class="card-title visualization-header">
 
-
-        <!-- =====================================
-             SEEK CALCULATION TABLE
-             ===================================== -->
-
-        <section class="card results-table-card">
-
-            <div class="card-title">
-
-                <span>▤</span>
-
-                <h2>
-                    Seek Calculation
-                </h2>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-                <table id="seekTable">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Step
-                            </th>
-
-                            <th>
-                                From
-                            </th>
-
-                            <th>
-                                To
-                            </th>
-
-                            <th>
-                                Movement
-                            </th>
-
-                            <th>
-                                Total Seek
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody id="seekTableBody">
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =====================================
-             RESULTS
-             ===================================== -->
-
-        <section class="card metrics-card">
-
-            <div class="card-title">
-
+            <div class="title-left">
                 <span>▥</span>
 
                 <h2>
-                    Results
+                    Disk Head Movement
                 </h2>
+            </div>
+
+            <span
+                id="stepCounter"
+                class="step-counter"
+            >
+                Step 0 of 0
+            </span>
+
+        </div>
+
+
+        <div class="canvas-wrapper">
+
+            <canvas id="diskCanvas"></canvas>
+
+            <div
+                id="canvasMessage"
+                class="canvas-message"
+            >
+                Click <b>Simulate</b> to start
+            </div>
+
+        </div>
+
+
+        <div class="legend">
+
+            <div class="legend-item">
+                <span class="legend-dot head-dot"></span>
+                Initial HEAD
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot request-dot"></span>
+                Request
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-line"></span>
+                Head Movement
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STEP INFO ================= -->
+
+    <section class="card step-card">
+
+        <div class="step-header">
+
+            <div class="card-title">
+                <span>▷</span>
+
+                <h2>
+                    Step-by-Step Execution
+                </h2>
+            </div>
+
+            <span id="movementText">
+                Run simulation to begin
+            </span>
+
+        </div>
+
+
+        <div class="step-info-grid">
+
+            <div class="info-box">
+                <span>Current HEAD</span>
+                <strong id="currentHead">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Next Request</span>
+                <strong id="nextRequest">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Seek Distance</span>
+                <strong id="seekDistance">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Total Seek</span>
+                <strong id="totalSeek">-</strong>
+            </div>
+
+        </div>
+
+
+        <div class="explanation">
+
+            <h3>💡 Explanation</h3>
+
+            <p id="explanationText">
+                Enter the disk requests and click
+                <b>Simulate</b> to start the visualization.
+            </p>
+
+        </div>
+
+
+        <div class="navigation">
+
+            <button
+                id="previousBtn"
+                type="button"
+                disabled
+            >
+                ← Previous
+            </button>
+
+            <button
+                id="nextBtn"
+                type="button"
+                disabled
+            >
+                Next →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= REQUEST ORDER ================= -->
+
+    <section class="card order-card">
+
+        <div class="card-title">
+
+            <span>▤</span>
+
+            <h2>
+                Request Execution Order
+            </h2>
+
+        </div>
+
+
+        <div
+            id="requestOrder"
+            class="request-order"
+        >
+
+            <span class="empty-order">
+                No simulation yet
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RESULTS ================= -->
+
+    <section class="card results-card">
+
+        <div class="card-title">
+
+            <span>▥</span>
+
+            <h2>
+                Results
+            </h2>
+
+        </div>
+
+
+        <div class="metrics-grid">
+
+            <div class="metric">
+
+                <span>↔</span>
+
+                <p>
+                    Total Seek Distance
+                </p>
+
+                <strong id="resultSeek">
+                    -
+                </strong>
 
             </div>
 
 
-            <div class="metrics-grid">
+            <div class="metric">
 
+                <span>↗</span>
 
-                <div class="metric waiting">
+                <p>
+                    Requests Served
+                </p>
 
-                    <span>
-                        ↔
-                    </span>
-
-                    <p>
-                        Total Seek Time
-                    </p>
-
-                    <strong id="totalSeekTime">
-                        -
-                    </strong>
-
-                </div>
-
-
-
-                <div class="metric turnaround">
-
-                    <span>
-                        ∿
-                    </span>
-
-                    <p>
-                        Average Seek Time
-                    </p>
-
-                    <strong id="averageSeekTime">
-                        -
-                    </strong>
-
-                </div>
-
-
-
-                <div class="metric response">
-
-                    <span>
-                        #
-                    </span>
-
-                    <p>
-                        Total Requests
-                    </p>
-
-                    <strong id="requestCount">
-                        -
-                    </strong>
-
-                </div>
-
-
-
-                <div class="metric cpu">
-
-                    <span>
-                        ●
-                    </span>
-
-                    <p>
-                        Current Head
-                    </p>
-
-                    <strong id="resultCurrentHead">
-                        -
-                    </strong>
-
-                </div>
+                <strong id="resultRequests">
+                    -
+                </strong>
 
             </div>
 
-        </section>
 
-    </div>
+            <div class="metric">
+
+                <span>⌛</span>
+
+                <p>
+                    Average Seek
+                </p>
+
+                <strong id="resultAverage">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
 
 </main>
 
 
-
-<!-- =========================================
-     FOOTER
-     ========================================= -->
-
 <footer>
 
     <p>
-        © 2026 OS Lab |
-        Built with HTML, CSS and JavaScript
+        © 2026 OS Lab | Built with HTML, CSS and JavaScript
     </p>
 
 </footer>
 
 
-
-<!-- =========================================
-     JAVASCRIPT
-     ========================================= -->
+<!-- IMPORTANT:
+     Scripts are loaded AFTER the HTML.
+-->
 
 <script src="js/disk/fcfs.js"></script>
+<script src="js/disk/sstf.js"></script>
+<script src="js/disk/scan.js"></script>
+<script src="js/disk/cscan.js"></script>
+<script src="js/disk/look.js"></script>
+<script src="js/disk/clook.js"></script>
 
 <script src="js/disk-scheduling.js"></script>
 
 </body>
-
 </html>
