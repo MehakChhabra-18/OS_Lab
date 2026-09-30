@@ -1,11 +1,11 @@
 /* =========================================================
-   OS LAB - DISK SCHEDULING
-   Complete Controller + Visualization
+   OS LAB - DISK SCHEDULING CONTROLLER
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("🔥 Disk Scheduling JS Loaded");
+    console.log("DISK SCHEDULING CONTROLLER LOADED");
+
 
     /* =====================================================
        DOM ELEMENTS
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       SAFETY CHECK
+       CHECK ELEMENTS
        ===================================================== */
 
     if (
@@ -85,13 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         console.error(
-            "❌ Disk Scheduling: Required HTML element missing."
+            "Some required HTML elements are missing."
         );
 
         return;
     }
-
-    console.log("✅ All required HTML elements found");
 
 
     /* =====================================================
@@ -102,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.getContext("2d");
 
     let canvasWidth = 0;
+
     let canvasHeight = 650;
 
 
@@ -109,21 +108,19 @@ document.addEventListener("DOMContentLoaded", () => {
        SIMULATION STATE
        ===================================================== */
 
+    let initialHead = 50;
+
+    let requests = [];
+
     let simulationSteps = [];
 
     let currentStep = 0;
 
     let simulationStarted = false;
 
-    let initialHead = 50;
-
-    let requests = [];
-
-    let selectedAlgorithm = "fcfs";
-
 
     /* =====================================================
-       RESIZE CANVAS
+       CANVAS RESIZE
        ===================================================== */
 
     function resizeCanvas() {
@@ -132,16 +129,11 @@ document.addEventListener("DOMContentLoaded", () => {
             canvas.parentElement;
 
         if (!wrapper) {
-
-            console.error(
-                "❌ Canvas wrapper not found"
-            );
-
             return;
         }
 
         const width =
-            wrapper.clientWidth;
+            wrapper.clientWidth || 900;
 
         const height = 650;
 
@@ -149,30 +141,18 @@ document.addEventListener("DOMContentLoaded", () => {
             window.devicePixelRatio || 1;
 
 
-        /*
-         * CSS size
-         */
-
         canvas.style.width = "100%";
 
         canvas.style.height =
-            height + "px";
+            `${height}px`;
 
-
-        /*
-         * Actual drawing buffer
-         */
 
         canvas.width =
-            Math.floor(width * dpr);
+            width * dpr;
 
         canvas.height =
-            Math.floor(height * dpr);
+            height * dpr;
 
-
-        /*
-         * Scale drawing according to DPR
-         */
 
         ctx.setTransform(
             dpr,
@@ -200,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       PARSE REQUEST QUEUE
+       PARSE REQUESTS
        ===================================================== */
 
     function parseRequests() {
@@ -217,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       VALIDATE INPUT
+       VALIDATION
        ===================================================== */
 
     function validateInput() {
@@ -232,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Number.isFinite(head)) {
 
             alert(
-                "Please enter a valid initial head position."
+                "Please enter a valid initial HEAD position."
             );
 
             return false;
@@ -242,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (head < 0 || head > 199) {
 
             alert(
-                "Head position must be between 0 and 199."
+                "HEAD position must be between 0 and 199."
             );
 
             return false;
@@ -259,12 +239,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        for (const value of queue) {
+        for (const request of queue) {
 
-            if (value < 0 || value > 199) {
+            if (
+                request < 0 ||
+                request > 199
+            ) {
 
                 alert(
-                    "All disk requests must be between 0 and 199."
+                    "Every request must be between 0 and 199."
                 );
 
                 return false;
@@ -277,289 +260,135 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       FCFS
+       GET SELECTED ALGORITHM
        ===================================================== */
 
-    function fcfsAlgorithm() {
+    function getAlgorithmSequence() {
 
-        return [...requests];
-    }
-
-
-    /* =====================================================
-       SSTF
-       ===================================================== */
-
-    function sstfAlgorithm() {
-
-        const remaining =
-            [...requests];
-
-        const sequence = [];
-
-        let head =
-            initialHead;
-
-
-        while (remaining.length > 0) {
-
-            let closestIndex = 0;
-
-            let closestDistance =
-                Math.abs(
-                    remaining[0] - head
-                );
-
-
-            for (
-                let i = 1;
-                i < remaining.length;
-                i++
-            ) {
-
-                const distance =
-                    Math.abs(
-                        remaining[i] - head
-                    );
-
-
-                if (
-                    distance <
-                    closestDistance
-                ) {
-
-                    closestDistance =
-                        distance;
-
-                    closestIndex =
-                        i;
-                }
-            }
-
-
-            const selected =
-                remaining.splice(
-                    closestIndex,
-                    1
-                )[0];
-
-
-            sequence.push(selected);
-
-            head = selected;
-        }
-
-
-        return sequence;
-    }
-
-
-    /* =====================================================
-       SCAN
-       ===================================================== */
-
-    function scanAlgorithm() {
-
-        const sorted =
-            [...requests]
-                .sort((a, b) => a - b);
-
-
-        const right =
-            sorted.filter(
-                value =>
-                    value >= initialHead
-            );
-
-
-        const left =
-            sorted.filter(
-                value =>
-                    value < initialHead
-            );
-
-
-        const result = [
-            ...right,
-            199,
-            ...left.reverse()
-        ];
-
-
-        return removeConsecutiveDuplicates(
-            result
-        );
-    }
-
-
-    /* =====================================================
-       C-SCAN
-       ===================================================== */
-
-    function cscanAlgorithm() {
-
-        const sorted =
-            [...requests]
-                .sort((a, b) => a - b);
-
-
-        const right =
-            sorted.filter(
-                value =>
-                    value >= initialHead
-            );
-
-
-        const left =
-            sorted.filter(
-                value =>
-                    value < initialHead
-            );
-
-
-        const result = [
-            ...right,
-            199,
-            0,
-            ...left
-        ];
-
-
-        return removeConsecutiveDuplicates(
-            result
-        );
-    }
-
-
-    /* =====================================================
-       LOOK
-       ===================================================== */
-
-    function lookAlgorithm() {
-
-        const sorted =
-            [...requests]
-                .sort((a, b) => a - b);
-
-
-        const right =
-            sorted.filter(
-                value =>
-                    value >= initialHead
-            );
-
-
-        const left =
-            sorted.filter(
-                value =>
-                    value < initialHead
-            );
-
-
-        return [
-            ...right,
-            ...left.reverse()
-        ];
-    }
-
-
-    /* =====================================================
-       C-LOOK
-       ===================================================== */
-
-    function clookAlgorithm() {
-
-        const sorted =
-            [...requests]
-                .sort((a, b) => a - b);
-
-
-        const right =
-            sorted.filter(
-                value =>
-                    value >= initialHead
-            );
-
-
-        const left =
-            sorted.filter(
-                value =>
-                    value < initialHead
-            );
-
-
-        return [
-            ...right,
-            ...left
-        ];
-    }
-
-
-    /* =====================================================
-       REMOVE CONSECUTIVE DUPLICATES
-       ===================================================== */
-
-    function removeConsecutiveDuplicates(array) {
-
-        return array.filter(
-            (value, index) => {
-
-                if (index === 0) {
-                    return true;
-                }
-
-                return value !==
-                    array[index - 1];
-            }
-        );
-    }
-
-
-    /* =====================================================
-       SELECT ALGORITHM
-       ===================================================== */
-
-    function calculateSequence() {
-
-        selectedAlgorithm =
+        const algorithm =
             algorithmSelect.value;
 
 
-        switch (selectedAlgorithm) {
+        console.log(
+            "Selected algorithm:",
+            algorithm
+        );
+
+
+        switch (algorithm) {
 
             case "fcfs":
 
-                return fcfsAlgorithm();
+                if (typeof fcfs !== "function") {
+
+                    console.error(
+                        "fcfs.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return fcfs(
+                    requests,
+                    initialHead
+                );
 
 
             case "sstf":
 
-                return sstfAlgorithm();
+                if (typeof sstf !== "function") {
+
+                    console.error(
+                        "sstf.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return sstf(
+                    requests,
+                    initialHead
+                );
 
 
             case "scan":
 
-                return scanAlgorithm();
+                if (typeof scan !== "function") {
+
+                    console.error(
+                        "scan.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return scan(
+                    requests,
+                    initialHead,
+                    200
+                );
 
 
             case "cscan":
 
-                return cscanAlgorithm();
+                if (typeof cscan !== "function") {
+
+                    console.error(
+                        "cscan.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return cscan(
+                    requests,
+                    initialHead,
+                    200
+                );
 
 
             case "look":
 
-                return lookAlgorithm();
+                if (typeof look !== "function") {
+
+                    console.error(
+                        "look.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return look(
+                    requests,
+                    initialHead
+                );
 
 
             case "clook":
 
-                return clookAlgorithm();
+                if (typeof clook !== "function") {
+
+                    console.error(
+                        "clook.js is not loaded."
+                    );
+
+                    return [];
+                }
+
+                return clook(
+                    requests,
+                    initialHead
+                );
 
 
             default:
 
-                return fcfsAlgorithm();
+                console.error(
+                    "Unknown algorithm:",
+                    algorithm
+                );
+
+                return [];
         }
     }
 
@@ -579,11 +408,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         sequence.forEach(
-            (request, index) => {
+            (destination, index) => {
 
                 const distance =
                     Math.abs(
-                        request -
+                        destination -
                         previous
                     );
 
@@ -600,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         previous,
 
                     to:
-                        request,
+                        destination,
 
                     distance:
                         distance,
@@ -611,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 previous =
-                    request;
+                    destination;
             }
         );
 
@@ -627,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function startSimulation() {
 
         console.log(
-            "🔥 SIMULATE CLICKED"
+            "SIMULATE BUTTON CLICKED"
         );
 
 
@@ -646,24 +475,27 @@ document.addEventListener("DOMContentLoaded", () => {
             parseRequests();
 
 
-        selectedAlgorithm =
-            algorithmSelect.value;
-
-
         const sequence =
-            calculateSequence();
+            getAlgorithmSequence();
 
 
         console.log(
-            "Algorithm:",
-            selectedAlgorithm
-        );
-
-
-        console.log(
-            "Sequence:",
+            "Generated sequence:",
             sequence
         );
+
+
+        if (
+            !sequence ||
+            sequence.length === 0
+        ) {
+
+            alert(
+                "Could not generate the scheduling sequence."
+            );
+
+            return;
+        }
 
 
         simulationSteps =
@@ -685,6 +517,11 @@ document.addEventListener("DOMContentLoaded", () => {
         updateUI();
 
         drawVisualization();
+
+
+        console.log(
+            "Simulation started successfully."
+        );
     }
 
 
@@ -696,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!simulationStarted) {
 
-            console.warn(
+            console.log(
                 "Start simulation first."
             );
 
@@ -709,13 +546,8 @@ document.addEventListener("DOMContentLoaded", () => {
             simulationSteps.length
         ) {
 
-            /*
-             * ONLY MOVE ONE STEP.
-             *
-             * Algorithm never changes here.
-             */
-
             currentStep++;
+
 
             updateUI();
 
@@ -723,8 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             console.log(
-                "Current step:",
-                currentStep
+                `Moved to step ${currentStep}`
             );
         }
     }
@@ -745,6 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             currentStep--;
 
+
             updateUI();
 
             drawVisualization();
@@ -753,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       UPDATE UI
+       UPDATE STEP INFORMATION
        ===================================================== */
 
     function updateUI() {
@@ -767,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         previousBtn.disabled =
-            currentStep <= 0;
+            currentStep === 0;
 
 
         nextBtn.disabled =
@@ -775,7 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /* -----------------------------------------------
-           STEP 0
+           INITIAL STATE
            ----------------------------------------------- */
 
         if (currentStep === 0) {
@@ -803,8 +635,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             explanationText.textContent =
-                `The disk head starts at ${initialHead}. ` +
-                `Click Next Step to begin servicing requests.`;
+                `HEAD starts at ${initialHead}. ` +
+                `Click Next to perform the first movement.`;
 
 
             return;
@@ -847,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         explanationText.textContent =
-            `The disk head moves from ${step.from} ` +
+            `HEAD moves from ${step.from} ` +
             `to ${step.to}. ` +
             `Seek distance = |${step.to} - ${step.from}| ` +
             `= ${step.distance} tracks.`;
@@ -860,11 +692,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateRequestOrder(sequence) {
 
-        if (!requestOrder) {
-            return;
-        }
-
-
         requestOrder.innerHTML = "";
 
 
@@ -872,9 +699,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (value, index) => {
 
                 const item =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 item.className =
@@ -922,7 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
             count > 0
                 ? (
                     total / count
-                ).toFixed(2)
+                  ).toFixed(2)
                 : "0.00";
 
 
@@ -945,14 +770,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function drawVisualization() {
 
-        if (!ctx || canvasWidth <= 0) {
+        if (
+            !ctx ||
+            canvasWidth <= 0
+        ) {
             return;
         }
 
 
-        /*
-         * Clear canvas
-         */
+        /* -----------------------------------------------
+           CLEAR
+           ----------------------------------------------- */
 
         ctx.clearRect(
             0,
@@ -962,9 +790,9 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-        /*
-         * Background
-         */
+        /* -----------------------------------------------
+           BACKGROUND
+           ----------------------------------------------- */
 
         ctx.fillStyle =
             "#0a1830";
@@ -978,24 +806,20 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-        /* =================================================
-           AXIS
-           ================================================= */
+        /* -----------------------------------------------
+           AXIS CONFIG
+           ----------------------------------------------- */
 
-        const left = 80;
+        const left = 70;
 
         const right =
-            canvasWidth - 80;
+            canvasWidth - 70;
 
         const axisY = 100;
 
         const usableWidth =
             right - left;
 
-
-        /*
-         * Convert disk position to X
-         */
 
         function getX(position) {
 
@@ -1009,14 +833,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /*
-         * Main axis
-         */
+        /* -----------------------------------------------
+           MAIN AXIS
+           ----------------------------------------------- */
 
         ctx.strokeStyle =
             "#52688f";
 
         ctx.lineWidth = 3;
+
 
         ctx.beginPath();
 
@@ -1033,13 +858,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.stroke();
 
 
-        /* =================================================
-           AXIS TICKS + LABELS
-           ================================================= */
+        /* -----------------------------------------------
+           AXIS NUMBERS
+           ----------------------------------------------- */
 
         ctx.textAlign =
             "center";
-
 
         ctx.font =
             "13px Arial";
@@ -1058,19 +882,19 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.strokeStyle =
                 "#52688f";
 
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1;
 
 
             ctx.beginPath();
 
             ctx.moveTo(
                 x,
-                axisY - 8
+                axisY - 7
             );
 
             ctx.lineTo(
                 x,
-                axisY + 8
+                axisY + 7
             );
 
             ctx.stroke();
@@ -1083,14 +907,14 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillText(
                 value,
                 x,
-                axisY - 25
+                axisY - 20
             );
         }
 
 
-        /*
-         * 199 label
-         */
+        /* -----------------------------------------------
+           199
+           ----------------------------------------------- */
 
         const x199 =
             getX(199);
@@ -1099,16 +923,17 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.strokeStyle =
             "#52688f";
 
+
         ctx.beginPath();
 
         ctx.moveTo(
             x199,
-            axisY - 8
+            axisY - 7
         );
 
         ctx.lineTo(
             x199,
-            axisY + 8
+            axisY + 7
         );
 
         ctx.stroke();
@@ -1121,13 +946,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillText(
             "199",
             x199,
-            axisY - 25
+            axisY - 20
         );
 
 
-        /* =================================================
+        /* -----------------------------------------------
            REQUEST POINTS
-           ================================================= */
+           ----------------------------------------------- */
 
         const uniqueRequests =
             [...new Set(requests)];
@@ -1140,16 +965,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     getX(request);
 
 
-                /*
-                 * Request circle
-                 */
-
                 ctx.beginPath();
 
                 ctx.arc(
                     x,
                     axisY,
-                    9,
+                    8,
                     0,
                     Math.PI * 2
                 );
@@ -1164,7 +985,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.shadowBlur =
-                    13;
+                    10;
 
 
                 ctx.fill();
@@ -1172,10 +993,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 ctx.shadowBlur = 0;
 
-
-                /*
-                 * Request label
-                 */
 
                 ctx.fillStyle =
                     "#dce5f5";
@@ -1188,15 +1005,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.fillText(
                     request,
                     x,
-                    axisY + 34
+                    axisY + 30
                 );
             }
         );
 
 
-        /* =================================================
+        /* -----------------------------------------------
            INITIAL HEAD
-           ================================================= */
+           ----------------------------------------------- */
 
         const headX =
             getX(initialHead);
@@ -1222,7 +1039,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.shadowBlur =
-            17;
+            15;
 
 
         ctx.fill();
@@ -1230,10 +1047,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ctx.shadowBlur = 0;
 
-
-        /*
-         * HEAD label
-         */
 
         ctx.fillStyle =
             "#ff5cab";
@@ -1246,28 +1059,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillText(
             "HEAD",
             headX,
-            axisY + 60
+            axisY + 55
         );
 
 
-        ctx.fillStyle =
-            "#dce5f5";
-
-
-        ctx.font =
-            "13px Arial";
-
-
-        ctx.fillText(
-            initialHead,
-            headX,
-            axisY + 80
-        );
-
-
-        /* =================================================
-           ZIG-ZAG PATH
-           ================================================= */
+        /* -----------------------------------------------
+           NO STEPS YET
+           ----------------------------------------------- */
 
         if (
             !simulationStarted ||
@@ -1278,29 +1076,43 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /*
-         * Starting Y position
-         */
-
-        const laneStart = 175;
-
-        /*
-         * Distance between every movement
-         */
-
-        const laneHeight = 72;
-
-
-        /*
-         * Only show movements reached
-         * so far.
-         */
+        /* =================================================
+           MOVEMENT PATH
+           ================================================= */
 
         const visibleSteps =
             simulationSteps.slice(
                 0,
                 currentStep
             );
+
+
+        /*
+         * Dynamically calculate lane height.
+         *
+         * This prevents the visualization from
+         * going outside the canvas.
+         */
+
+        const availableHeight =
+            canvasHeight - 170;
+
+
+        const laneHeight =
+            Math.max(
+                35,
+                Math.min(
+                    72,
+                    availableHeight /
+                    Math.max(
+                        visibleSteps.length,
+                        1
+                    )
+                )
+            );
+
+
+        const laneStart = 175;
 
 
         visibleSteps.forEach(
@@ -1319,23 +1131,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     index * laneHeight;
 
 
-                /*
-                 * Keep path inside canvas.
-                 *
-                 * If there are many steps,
-                 * compress spacing.
-                 */
-
-                const actualY =
-                    Math.min(
-                        y,
-                        canvasHeight - 45
-                    );
-
-
-                /* =========================================
-                   VERTICAL DROP
-                   ========================================= */
+                /* -----------------------------------------
+                   VERTICAL LINE
+                   ----------------------------------------- */
 
                 ctx.strokeStyle =
                     "#ff3d9a";
@@ -1345,38 +1143,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.shadowColor =
                     "#ff3d9a";
 
-                ctx.shadowBlur = 8;
+                ctx.shadowBlur = 7;
 
 
                 ctx.beginPath();
 
                 ctx.moveTo(
                     fromX,
-                    axisY
+                    index === 0
+                        ? axisY
+                        : y - laneHeight
                 );
 
                 ctx.lineTo(
                     fromX,
-                    actualY
+                    y
                 );
 
                 ctx.stroke();
 
 
-                /* =========================================
+                /* -----------------------------------------
                    HORIZONTAL MOVEMENT
-                   ========================================= */
+                   ----------------------------------------- */
 
                 ctx.beginPath();
 
                 ctx.moveTo(
                     fromX,
-                    actualY
+                    y
                 );
 
                 ctx.lineTo(
                     toX,
-                    actualY
+                    y
                 );
 
                 ctx.stroke();
@@ -1385,27 +1185,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.shadowBlur = 0;
 
 
-                /* =========================================
+                /* -----------------------------------------
                    ARROW
-                   ========================================= */
+                   ----------------------------------------- */
 
                 drawArrowHead(
                     toX,
-                    actualY,
+                    y,
                     toX >= fromX
                 );
 
 
-                /* =========================================
-                   DESTINATION CIRCLE
-                   ========================================= */
+                /* -----------------------------------------
+                   DESTINATION POINT
+                   ----------------------------------------- */
 
                 ctx.beginPath();
 
                 ctx.arc(
                     toX,
-                    actualY,
-                    8,
+                    y,
+                    7,
                     0,
                     Math.PI * 2
                 );
@@ -1420,14 +1220,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.strokeStyle =
                     "#ff3d9a";
 
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 2.5;
 
                 ctx.stroke();
 
 
-                /* =========================================
-                   DISTANCE LABEL
-                   ========================================= */
+                /* -----------------------------------------
+                   DISTANCE
+                   ----------------------------------------- */
 
                 const middleX =
                     (
@@ -1437,46 +1237,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.fillStyle =
-                    "#ff8fc5";
+                    "#ff9dcc";
 
 
                 ctx.font =
-                    "bold 13px Arial";
-
-
-                ctx.textAlign =
-                    "center";
+                    "bold 12px Arial";
 
 
                 ctx.fillText(
-                    `${step.distance} tracks`,
+                    `${step.distance}`,
                     middleX,
-                    actualY - 12
+                    y - 9
                 );
 
 
-                /* =========================================
+                /* -----------------------------------------
                    STEP LABEL
-                   ========================================= */
+                   ----------------------------------------- */
 
                 ctx.fillStyle =
-                    "#91a5c6";
+                    "#8fa4c5";
 
 
                 ctx.font =
-                    "12px Arial";
+                    "11px Arial";
 
 
                 ctx.fillText(
                     `Step ${index + 1}`,
                     middleX,
-                    actualY + 25
+                    y + 20
                 );
             }
         );
-
-
-        ctx.shadowBlur = 0;
     }
 
 
@@ -1490,7 +1283,7 @@ document.addEventListener("DOMContentLoaded", () => {
         movingRight
     ) {
 
-        const size = 10;
+        const size = 9;
 
 
         ctx.fillStyle =
@@ -1509,12 +1302,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ctx.lineTo(
                 x - size,
-                y - size * 0.65
+                y - size * 0.6
             );
 
             ctx.lineTo(
                 x - size,
-                y + size * 0.65
+                y + size * 0.6
             );
 
         } else {
@@ -1526,12 +1319,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ctx.lineTo(
                 x + size,
-                y - size * 0.65
+                y - size * 0.6
             );
 
             ctx.lineTo(
                 x + size,
-                y + size * 0.65
+                y + size * 0.6
             );
         }
 
@@ -1549,23 +1342,23 @@ document.addEventListener("DOMContentLoaded", () => {
     function resetSimulation() {
 
         console.log(
-            "🔄 RESET CLICKED"
+            "RESET BUTTON CLICKED"
         );
-
-
-        simulationSteps = [];
-
-        currentStep = 0;
-
-        simulationStarted = false;
-
-        requests = [];
 
 
         initialHead =
             Number(
                 initialHeadInput.value
             ) || 50;
+
+
+        requests = [];
+
+        simulationSteps = [];
+
+        currentStep = 0;
+
+        simulationStarted = false;
 
 
         stepCounter.textContent =
@@ -1661,10 +1454,8 @@ document.addEventListener("DOMContentLoaded", () => {
         () => {
 
             /*
-             * Changing algorithm resets the current
-             * simulation.
-             *
-             * User must press Simulate again.
+             * Changing algorithm requires
+             * a fresh simulation.
              */
 
             simulationStarted = false;
@@ -1672,14 +1463,6 @@ document.addEventListener("DOMContentLoaded", () => {
             simulationSteps = [];
 
             currentStep = 0;
-
-
-            previousBtn.disabled =
-                true;
-
-
-            nextBtn.disabled =
-                true;
 
 
             stepCounter.textContent =
@@ -1706,29 +1489,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Run simulation to begin";
 
 
+            const selectedText =
+                algorithmSelect
+                    .options[
+                        algorithmSelect.selectedIndex
+                    ].text;
+
+
             explanationText.textContent =
-                `Selected algorithm: ${
-                    algorithmSelect
-                        .options[
-                            algorithmSelect
-                                .selectedIndex
-                        ].text
-                }. Click Simulate to start.`;
+                `Selected: ${selectedText}. ` +
+                `Click Simulate to generate the sequence.`;
+
+
+            previousBtn.disabled = true;
+
+            nextBtn.disabled = true;
 
 
             drawVisualization();
-
-
-            console.log(
-                "Algorithm changed:",
-                algorithmSelect.value
-            );
         }
     );
 
 
     /* =====================================================
-       INITIALIZE
+       INITIALIZATION
        ===================================================== */
 
     resizeCanvas();
@@ -1737,7 +1521,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     console.log(
-        "✅ Disk Scheduling initialized successfully"
+        "Disk Scheduling controller ready."
     );
 
 });

@@ -1,70 +1,33 @@
-/*
-    =========================================================
-    FCFS DISK SCHEDULING
-    =========================================================
+/* =========================================================
+   FCFS - FIRST COME FIRST SERVE
+   ========================================================= */
 
-    Input:
-        initialHead
-        requests[]
+function fcfs(requests, initialHead) {
 
-    Output:
-        {
-            order: [],
-            movements: [],
-            totalSeek: number
-        }
-*/
+    console.log("FCFS FUNCTION CALLED");
+
+    console.log("FCFS Requests:", requests);
+
+    console.log("FCFS Initial Head:", initialHead);
 
 
-function fcfs(initialHead, requests) {
+    // Safety check
+    if (!Array.isArray(requests)) {
 
-    const order = [...requests];
-
-    const movements = [];
-
-    let currentHead = initialHead;
-
-    let totalSeek = 0;
-
-
-    for (let i = 0; i < order.length; i++) {
-
-        const nextHead = order[i];
-
-        const distance = Math.abs(
-            nextHead - currentHead
+        console.error(
+            "FCFS ERROR: requests must be an array",
+            requests
         );
 
-
-        totalSeek += distance;
-
-
-        movements.push({
-
-            from: currentHead,
-
-            to: nextHead,
-
-            distance: distance,
-
-            request: nextHead,
-
-            step: i + 1
-
-        });
-
-
-        currentHead = nextHead;
+        return [];
     }
 
 
-    return {
+    /*
+     * FCFS simply serves requests
+     * in the exact order in which
+     * they were given.
+     */
 
-        order: order,
-
-        movements: movements,
-
-        totalSeek: totalSeek
-
-    };
+    return [...requests];
 }

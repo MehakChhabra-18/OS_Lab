@@ -39,122 +39,156 @@ body {
    HEADER
    ========================= */
 
-.header {
-    width: 100%;
-    min-height: 86px;
+/* ============================= */
+/* HEADER / NAVBAR */
+/* ============================= */
 
-    padding: 16px 32px;
+header {
+    height: 104px;
+    padding: 0 40px;
+
+    background: #0b172d;
+    border-bottom: 1px solid #26385d;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: 30px;
-
-    background: #09162d;
-
-    border-bottom: 1px solid #263b63;
-
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
+
+/* ============================= */
+/* BRAND */
+/* ============================= */
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 13px;
-
-    flex-shrink: 0;
+    gap: 20px;
 }
 
 .brand-icon {
-    width: 42px;
-    height: 42px;
+    width: 64px;
+    height: 64px;
+
+    border: 1px solid #35598c;
+    border-radius: 16px;
+
+    background: #101d38;
+    color: #ffc83d;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    font-size: 24px;
+}
 
-    background: #101f3c;
-
-    border: 1px solid #405b8b;
-
-    color: #ffbf3f;
-
-    font-size: 21px;
+.brand > div:last-child {
+    display: flex;
+    flex-direction: column;
 }
 
 .brand h1 {
-    font-size: 24px;
+    margin: 0;
+
+    font-size: 30px;
     line-height: 1.1;
 
-    font-weight: 700;
-
     color: #ffffff;
+    font-weight: 700;
 }
 
 .brand h1 span {
-    color: #8ba7ff;
+    color: #6f8fff;
 }
 
 .brand p {
-    margin-top: 4px;
+    margin: 4px 0 0;
 
-    font-size: 11px;
-
-    color: #7f94b8;
-
-    letter-spacing: 0.5px;
+    font-size: 14px;
+    color: #78a0df;
 }
 
-/* =========================
-   NAVIGATION
-   ========================= */
+/* ============================= */
+/* NAVIGATION */
+/* ============================= */
 
-.header nav {
+nav {
     display: flex;
     align-items: center;
-    justify-content: center;
-
-    gap: 7px;
-
-    flex-wrap: wrap;
+    gap: 34px;
 }
 
-.header nav a {
+nav a {
+    color: #9db8e8;
     text-decoration: none;
 
-    color: #9eafd0;
+    font-size: 15px;
+    font-weight: 400;
 
-    padding: 9px 14px;
+    padding: 13px 17px;
 
-    border-radius: 8px;
+    border: 1px solid transparent;
+    border-radius: 12px;
 
-    font-size: 13px;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
+    transition: 0.2s ease;
 }
 
-.header nav a:hover {
+nav a:hover {
+    color: #ffffff;
+}
+
+/* ACTIVE PAGE */
+
+nav a.active {
     color: #ffffff;
 
-    background: #122341;
+    background: #172d52;
+    border-color: #365b91;
 }
 
-.header nav a.active {
-    color: #ffffff;
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
 
-    background: #182b52;
+@media (max-width: 900px) {
 
-    border: 1px solid #3d5e96;
+    header {
+        height: auto;
+        min-height: 90px;
+        padding: 14px 24px;
+    }
 
-    box-shadow:
-        0 0 15px rgba(63, 81, 181, 0.15);
+    nav {
+        gap: 10px;
+    }
+
+    nav a {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
 }
+
+@media (max-width: 700px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+
+/* =========================
+   THEME
+   ========================= */
 
 .theme-toggle {
     color: #8ea4c9;
@@ -162,8 +196,11 @@ body {
     font-size: 17px;
 
     white-space: nowrap;
-}
 
+    min-width: 30px;
+
+    text-align: right;
+}
 /* =========================
    MAIN
    ========================= */

@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>OS Lab | Operating System Visualizer</title>
-<link rel="stylesheet" href="css/landing.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OS Lab | Operating System Visualizer</title>
+
+    <link rel="stylesheet" href="css/landing.css">
 </head>
 
 <body>
 
-<header>
+<!-- =====================================================
+     HEADER / NAVBAR
+     ===================================================== -->
 
-    <div class="logo-section">
+<header class="header">
 
-        <div class="logo-icon">
+    <div class="brand">
+
+        <div class="brand-icon">
             ⚙
         </div>
 
-        <div class="logo-text">
+        <div class="brand-info">
 
             <h1>
                 OS <span>Lab</span>
@@ -34,10 +41,6 @@
 
     <nav>
 
-        <a href="landing.html" class="active">
-            Home
-        </a>
-
         <a href="page-replacement.html">
             Page Replacement
         </a>
@@ -46,121 +49,55 @@
             CPU Scheduling
         </a>
 
+        <a href="disk-scheduling.html">
+            Disk Scheduling
+        </a>
+
     </nav>
+
+
+    <div class="theme-toggle">
+        ☾
+    </div>
 
 </header>
 
 
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
+
 <main>
 
-<!-- HERO -->
+    <!-- ================= HERO ================= -->
 
-<section class="hero" id="home">
+    <section class="hero" id="home">
 
-    <div class="hero-content">
+        <div class="hero-content">
 
-        <div class="badge">
-            OPERATING SYSTEM LAB
-        </div>
-
-        <h2>
-            Understand Operating Systems
-            <span>Visually.</span>
-        </h2>
-
-        <p>
-            Explore core Operating System concepts through
-            interactive simulations, step-by-step visualizations
-            and real-time algorithm execution.
-        </p>
-
-        <div class="hero-buttons">
-            <a href="#visualizers" class="primary-btn">
-                Explore Visualizers →
-            </a>
-
-            <a href="#about" class="secondary-btn">
-                Learn More
-            </a>
-        </div>
-
-    </div>
-
-    <div class="hero-visual">
-
-        <div class="terminal">
-
-            <div class="terminal-header">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="badge">
+                OPERATING SYSTEM LAB
             </div>
 
-            <div class="terminal-body">
-                <p><span class="purple">OS_LAB</span> $ start_visualizer</p>
-                <p>Loading Operating System concepts...</p>
-                <p class="success">✓ Page Replacement loaded</p>
-                <p class="success">✓ CPU Scheduling loaded</p>
-                <p class="yellow">→ Ready to simulate</p>
-            </div>
+            <h2>
+                Understand Operating Systems
+                <span>Visually.</span>
+            </h2>
 
-        </div>
+            <p>
+                Explore core Operating System concepts through
+                interactive simulations, step-by-step visualizations
+                and real-time algorithm execution.
+            </p>
 
-    </div>
+            <div class="hero-buttons">
 
-</section>
+                <a href="#visualizers" class="primary-btn">
+                    Explore Visualizers →
+                </a>
 
-
-<!-- VISUALIZERS -->
-
-<section class="visualizers" id="visualizers">
-
-    <div class="section-heading">
-
-        <span>EXPLORE</span>
-
-        <h2>Interactive Visualizers</h2>
-
-        <p>
-            Learn OS algorithms by seeing them execute
-            step-by-step.
-        </p>
-
-    </div>
-
-
-    <div class="visualizer-grid">
-
-        <!-- PAGE REPLACEMENT -->
-
-        <div class="visualizer-card">
-
-            <div class="card-icon purple-icon">
-                ▤
-            </div>
-
-            <div class="card-content">
-
-                <span class="card-label">
-                    MEMORY MANAGEMENT
-                </span>
-
-                <h3>Page Replacement</h3>
-
-                <p>
-                    Visualize how operating systems manage
-                    memory using page replacement algorithms.
-                </p>
-
-                <div class="tags">
-                    <span>FIFO</span>
-                    <span>LRU</span>
-                    <span>Optimal</span>
-                    <span>LFU</span>
-                </div>
-
-                <a href="page-replacement.html" class="card-link">
-                    Open Visualizer →
+                <a href="#about" class="secondary-btn">
+                    Learn More
                 </a>
 
             </div>
@@ -168,240 +105,419 @@
         </div>
 
 
-        <!-- CPU SCHEDULING -->
+        <div class="hero-visual">
 
-        <div class="visualizer-card">
+            <div class="terminal">
 
-            <div class="card-icon yellow-icon">
-                ▥
-            </div>
+                <div class="terminal-header">
 
-            <div class="card-content">
+                    <span></span>
+                    <span></span>
+                    <span></span>
 
-                <span class="card-label">
-                    PROCESS MANAGEMENT
-                </span>
-
-                <h3>CPU Scheduling</h3>
-
-                <p>
-                    Understand how the CPU selects processes
-                    and manages execution over time.
-                </p>
-
-                <div class="tags">
-                    <span>FCFS</span>
-                    <span>SJF</span>
-                    <span>Priority</span>
-                    <span>Round Robin</span>
                 </div>
 
-                <a href="cpu-scheduling.html" class="card-link">
-                    Open Visualizer →
-                </a>
 
-            </div>
+                <div class="terminal-body">
 
-        </div>
+                    <p>
+                        <span class="purple">OS_LAB</span>
+                        $ start_visualizer
+                    </p>
 
+                    <p>
+                        Loading Operating System concepts...
+                    </p>
 
-        <!-- COMING SOON -->
+                    <p class="success">
+                        ✓ Page Replacement loaded
+                    </p>
 
-        <div class="visualizer-card coming-soon">
+                    <p class="success">
+                        ✓ CPU Scheduling loaded
+                    </p>
 
-            <div class="card-icon green-icon">
-                ◈
-            </div>
+                    <p class="success">
+                        ✓ Disk Scheduling loaded
+                    </p>
 
-            <div class="card-content">
+                    <p class="yellow">
+                        → Ready to simulate
+                    </p>
 
-                <span class="card-label">
-                    DEADLOCK
-                </span>
-
-                <h3>Deadlock Detection</h3>
-
-                <p>
-                    Explore resource allocation and understand
-                    how deadlocks occur in operating systems.
-                </p>
-
-                <div class="tags">
-                    <span>Banker's</span>
-                    <span>RAG</span>
                 </div>
 
-                <span class="coming-label">
-                    COMING SOON
-                </span>
-
             </div>
 
         </div>
 
+    </section>
 
-        <!-- MEMORY ALLOCATION -->
 
-        <div class="visualizer-card coming-soon">
+    <!-- ================= VISUALIZERS ================= -->
 
-            <div class="card-icon pink-icon">
-                ▦
-            </div>
+    <section class="visualizers" id="visualizers">
 
-            <div class="card-content">
+        <div class="section-heading">
 
-                <span class="card-label">
-                    MEMORY MANAGEMENT
-                </span>
+            <span>
+                EXPLORE
+            </span>
 
-                <h3>Memory Allocation</h3>
+            <h2>
+                Interactive Visualizers
+            </h2>
 
-                <p>
-                    Visualize how memory is allocated to processes
-                    using different allocation strategies.
-                </p>
+            <p>
+                Learn OS algorithms by seeing them execute
+                step-by-step.
+            </p>
 
-                <div class="tags">
-                    <span>First Fit</span>
-                    <span>Best Fit</span>
-                    <span>Worst Fit</span>
+        </div>
+
+
+        <div class="visualizer-grid">
+
+
+            <!-- PAGE REPLACEMENT -->
+
+            <div class="visualizer-card">
+
+                <div class="card-icon purple-icon">
+                    ▤
                 </div>
 
-                <span class="coming-label">
-                    COMING SOON
-                </span>
+                <div class="card-content">
+
+                    <span class="card-label">
+                        MEMORY MANAGEMENT
+                    </span>
+
+                    <h3>
+                        Page Replacement
+                    </h3>
+
+                    <p>
+                        Visualize how operating systems manage
+                        memory using page replacement algorithms.
+                    </p>
+
+                    <div class="tags">
+
+                        <span>FIFO</span>
+                        <span>LRU</span>
+                        <span>Optimal</span>
+                        <span>LFU</span>
+
+                    </div>
+
+                    <a
+                        href="page-replacement.html"
+                        class="card-link"
+                    >
+                        Open Visualizer →
+                    </a>
+
+                </div>
 
             </div>
 
+
+            <!-- CPU SCHEDULING -->
+
+            <div class="visualizer-card">
+
+                <div class="card-icon yellow-icon">
+                    ▥
+                </div>
+
+                <div class="card-content">
+
+                    <span class="card-label">
+                        PROCESS MANAGEMENT
+                    </span>
+
+                    <h3>
+                        CPU Scheduling
+                    </h3>
+
+                    <p>
+                        Understand how the CPU selects processes
+                        and manages execution over time.
+                    </p>
+
+                    <div class="tags">
+
+                        <span>FCFS</span>
+                        <span>SJF</span>
+                        <span>Priority</span>
+                        <span>Round Robin</span>
+
+                    </div>
+
+                    <a
+                        href="cpu-scheduling.html"
+                        class="card-link"
+                    >
+                        Open Visualizer →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- DISK SCHEDULING -->
+
+            <div class="visualizer-card">
+
+                <div class="card-icon green-icon">
+                    ◈
+                </div>
+
+                <div class="card-content">
+
+                    <span class="card-label">
+                        STORAGE MANAGEMENT
+                    </span>
+
+                    <h3>
+                        Disk Scheduling
+                    </h3>
+
+                    <p>
+                        Visualize how disk head movement is optimized
+                        using different disk scheduling algorithms.
+                    </p>
+
+                    <div class="tags">
+
+                        <span>FCFS</span>
+                        <span>SSTF</span>
+                        <span>SCAN</span>
+                        <span>C-SCAN</span>
+                        <span>LOOK</span>
+                        <span>C-LOOK</span>
+
+                    </div>
+
+                    <a
+                        href="disk-scheduling.html"
+                        class="card-link"
+                    >
+                        Open Visualizer →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMORY ALLOCATION -->
+
+            <div class="visualizer-card coming-soon">
+
+                <div class="card-icon pink-icon">
+                    ▦
+                </div>
+
+                <div class="card-content">
+
+                    <span class="card-label">
+                        MEMORY MANAGEMENT
+                    </span>
+
+                    <h3>
+                        Memory Allocation
+                    </h3>
+
+                    <p>
+                        Visualize how memory is allocated to processes
+                        using different allocation strategies.
+                    </p>
+
+                    <div class="tags">
+
+                        <span>First Fit</span>
+                        <span>Best Fit</span>
+                        <span>Worst Fit</span>
+
+                    </div>
+
+                    <span class="coming-label">
+                        COMING SOON
+                    </span>
+
+                </div>
+
+            </div>
+
+
         </div>
 
-    </div>
-
-</section>
+    </section>
 
 
-<!-- FEATURES -->
+    <!-- ================= FEATURES ================= -->
 
-<section class="features" id="about">
+    <section class="features" id="about">
 
-    <div class="section-heading">
+        <div class="section-heading">
 
-        <span>WHY OS LAB?</span>
+            <span>
+                WHY OS LAB?
+            </span>
 
-        <h2>Learn By Visualizing</h2>
-
-        <p>
-            Instead of only reading algorithms, watch them
-            execute step-by-step.
-        </p>
-
-    </div>
-
-
-    <div class="feature-grid">
-
-        <div class="feature">
-
-            <div class="feature-icon">▶</div>
-
-            <h3>Step-by-Step</h3>
+            <h2>
+                Learn By Visualizing
+            </h2>
 
             <p>
-                Move through algorithm execution one step
-                at a time and understand every decision.
+                Instead of only reading algorithms, watch them
+                execute step-by-step.
             </p>
 
         </div>
 
 
-        <div class="feature">
+        <div class="feature-grid">
 
-            <div class="feature-icon">▥</div>
 
-            <h3>Interactive</h3>
+            <div class="feature">
 
-            <p>
-                Enter your own input and experiment with
-                different algorithms and configurations.
-            </p>
+                <div class="feature-icon">
+                    ▶
+                </div>
+
+                <h3>
+                    Step-by-Step
+                </h3>
+
+                <p>
+                    Move through algorithm execution one step
+                    at a time and understand every decision.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ▥
+                </div>
+
+                <h3>
+                    Interactive
+                </h3>
+
+                <p>
+                    Enter your own input and experiment with
+                    different algorithms and configurations.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    Visual Learning
+                </h3>
+
+                <p>
+                    See memory frames, processes, disk movements
+                    and algorithm decisions visually.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ↗
+                </div>
+
+                <h3>
+                    Compare Algorithms
+                </h3>
+
+                <p>
+                    Understand how different algorithms behave
+                    using the same input.
+                </p>
+
+            </div>
+
 
         </div>
 
+    </section>
 
-        <div class="feature">
 
-            <div class="feature-icon">◈</div>
+    <!-- ================= GUIDE ================= -->
 
-            <h3>Visual Learning</h3>
+    <section class="guide" id="guide">
+
+        <div class="guide-content">
+
+            <span>
+                START LEARNING
+            </span>
+
+            <h2>
+                Ready to explore
+                Operating Systems?
+            </h2>
 
             <p>
-                See memory frames, processes, Gantt charts
-                and algorithm decisions visually.
+                Choose a visualizer and start experimenting
+                with OS algorithms.
             </p>
+
+            <a
+                href="#visualizers"
+                class="primary-btn"
+            >
+                Start Exploring →
+            </a>
 
         </div>
 
-
-        <div class="feature">
-
-            <div class="feature-icon">↗</div>
-
-            <h3>Compare Algorithms</h3>
-
-            <p>
-                Understand how different algorithms behave
-                using the same input.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- GUIDE -->
-
-<section class="guide" id="guide">
-
-    <div class="guide-content">
-
-        <span>START LEARNING</span>
-
-        <h2>
-            Ready to explore
-            Operating Systems?
-        </h2>
-
-        <p>
-            Choose a visualizer and start experimenting
-            with OS algorithms.
-        </p>
-
-        <a href="#visualizers" class="primary-btn">
-            Start Exploring →
-        </a>
-
-    </div>
-
-</section>
+    </section>
 
 </main>
 
 
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
 <footer>
 
     <div class="footer-brand">
-        <strong>OS Lab</strong>
-        <span>Operating System Visualizer</span>
+
+        <strong>
+            OS Lab
+        </strong>
+
+        <span>
+            Operating System Visualizer
+        </span>
+
     </div>
+
 
     <p>
         © 2026 OS Lab · Built for learning Operating Systems
     </p>
 
 </footer>
-
 
 </body>
 </html>

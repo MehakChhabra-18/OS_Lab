@@ -1,21 +1,52 @@
+/* =========================================================
+   SSTF - SHORTEST SEEK TIME FIRST
+   ========================================================= */
+
 function sstf(requests, initialHead) {
 
+    console.log("SSTF FUNCTION CALLED");
+    console.log("SSTF Requests:", requests);
+    console.log("SSTF Initial Head:", initialHead);
+
+    // Safety check
+    if (!Array.isArray(requests)) {
+
+        console.error(
+            "SSTF ERROR: requests must be an array",
+            requests
+        );
+
+        return [];
+    }
+
+    // Make a copy so original request array is not modified
     const remaining = [...requests];
 
-    const steps = [];
+    const sequence = [];
 
-    let currentHead = initialHead;
+    let head = initialHead;
 
-    let totalSeek = 0;
+
+    /* =====================================================
+       SSTF ALGORITHM
+
+       At every step:
+       1. Look at all unserved requests
+       2. Calculate distance from current HEAD
+       3. Pick the closest request
+       4. Move HEAD there
+       5. Remove that request
+       ===================================================== */
 
     while (remaining.length > 0) {
 
         let closestIndex = 0;
 
-        let closestDistance =
+        let shortestDistance =
             Math.abs(
-                remaining[0] - currentHead
+                remaining[0] - head
             );
+
 
         for (
             let i = 1;
@@ -25,14 +56,15 @@ function sstf(requests, initialHead) {
 
             const distance =
                 Math.abs(
-                    remaining[i] - currentHead
+                    remaining[i] - head
                 );
 
+
             if (
-                distance < closestDistance
+                distance < shortestDistance
             ) {
 
-                closestDistance =
+                shortestDistance =
                     distance;
 
                 closestIndex =
@@ -40,33 +72,47 @@ function sstf(requests, initialHead) {
             }
         }
 
-        const nextRequest =
+
+        // Selected request
+        const selected =
             remaining[closestIndex];
 
-        const distance =
-            Math.abs(
-                nextRequest - currentHead
-            );
 
-        totalSeek += distance;
+        // Add ONLY the number
+        sequence.push(selected);
 
-        steps.push({
-            from: currentHead,
-            to: nextRequest,
-            distance: distance,
-            total: totalSeek
-        });
 
-        currentHead =
-            nextRequest;
+        // Move HEAD
+        head = selected;
 
+
+        // Remove served request
         remaining.splice(
             closestIndex,
             1
         );
     }
 
-    return steps;
-}
 
-window.sstf = sstf;
+    console.log(
+        "SSTF Generated Sequence:",
+        sequence
+    );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Return only numbers.
+     *
+     * Controller expects:
+     *
+     * [65, 67, 98, 122, ...]
+     *
+     * NOT:
+     *
+     * [{request:65, distance:12}, ...]
+     */
+
+    return sequence;
+}
