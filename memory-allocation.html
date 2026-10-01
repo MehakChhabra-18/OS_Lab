@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OS Lab | Memory Allocation</title>
+
+    <link rel="stylesheet" href="css/memory-allocation.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ⚙
+        </div>
+
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
+        </div>
+
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="page-replacement.html">
+            Page Replacement
+        </a>
+
+        <a href="cpu-scheduling.html">
+            CPU Scheduling
+        </a>
+
+        <a href="disk-scheduling.html">
+            Disk Scheduling
+        </a>
+
+        <a href="memory-allocation.html" class="active">
+            Memory Allocation
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    <!-- ================= CONTROLS ================= -->
+
+    <section class="card controls-card">
+
+        <div class="card-title">
+
+            <span>⚙</span>
+
+            <h2>Simulation Controls</h2>
+
+        </div>
+
+
+        <div class="controls-grid">
+
+            <div class="control-group">
+
+                <label for="algorithm">
+                    Memory Allocation Algorithm
+                </label>
+
+                <select id="algorithm">
+
+                    <option value="first-fit">
+                        First Fit
+                    </option>
+
+                    <option value="best-fit">
+                        Best Fit
+                    </option>
+
+                    <option value="worst-fit">
+                        Worst Fit
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control-group">
+
+                <label for="memoryBlocks">
+                    Memory Blocks
+                </label>
+
+                <input
+                    type="text"
+                    id="memoryBlocks"
+                    value="100, 500, 200, 300, 600"
+                    placeholder="Example: 100, 500, 200, 300"
+                >
+
+            </div>
+
+
+            <div class="control-group full-width">
+
+                <label for="processes">
+                    Processes
+                </label>
+
+                <input
+                    type="text"
+                    id="processes"
+                    value="212, 417, 112, 426"
+                    placeholder="Example: 212, 417, 112, 426"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                id="simulateBtn"
+                class="simulate-btn"
+            >
+                ▶ &nbsp; Simulate
+            </button>
+
+            <button
+                id="resetBtn"
+                class="reset-btn"
+            >
+                ⟳ &nbsp; Reset
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= VISUALIZATION ================= -->
+
+    <section class="card visualization-card">
+
+        <div class="card-title">
+
+            <span>▥</span>
+
+            <h2>
+                Memory Allocation Visualization
+            </h2>
+
+            <span
+                id="stepCounter"
+                class="step-counter"
+            >
+                Step 0 of 0
+            </span>
+
+        </div>
+
+
+        <div class="memory-visualization">
+
+            <div class="memory-column">
+
+                <h3>Memory Blocks</h3>
+
+                <div id="memoryBlocksDisplay">
+
+                    <div class="empty-state">
+                        Run simulation to visualize memory.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="allocation-column">
+
+                <h3>Allocation Status</h3>
+
+                <div id="allocationDisplay">
+
+                    <div class="empty-state">
+                        No allocation yet.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="legend">
+
+            <div class="legend-item">
+                <span class="legend-dot free-dot"></span>
+                Free Block
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot allocated-dot"></span>
+                Allocated
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot process-dot"></span>
+                Process
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STEP INFO ================= -->
+
+    <section class="card step-card">
+
+        <div class="step-header">
+
+            <div class="card-title">
+
+                <span>▷</span>
+
+                <h2>
+                    Step-by-Step Execution
+                </h2>
+
+            </div>
+
+            <span id="movementText">
+                Run simulation to begin
+            </span>
+
+        </div>
+
+
+        <div class="step-info-grid">
+
+            <div class="info-box">
+
+                <span>Current Process</span>
+
+                <strong id="currentProcess">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>Process Size</span>
+
+                <strong id="processSize">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>Allocated Block</span>
+
+                <strong id="allocatedBlock">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>Remaining Space</span>
+
+                <strong id="remainingSpace">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="explanation">
+
+            <h3>
+                💡 &nbsp; Explanation
+            </h3>
+
+            <p id="explanationText">
+                Enter memory blocks and processes, then click
+                <b>Simulate</b> to start the visualization.
+            </p>
+
+        </div>
+
+
+        <div class="navigation">
+
+            <button
+                id="previousBtn"
+                disabled
+            >
+                ← Previous
+            </button>
+
+            <button
+                id="nextBtn"
+                disabled
+            >
+                Next →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ALLOCATION ORDER ================= -->
+
+    <section class="card order-card">
+
+        <div class="card-title">
+
+            <span>▤</span>
+
+            <h2>
+                Allocation Order
+            </h2>
+
+        </div>
+
+
+        <div
+            id="allocationOrder"
+            class="allocation-order"
+        >
+
+            <span class="empty-order">
+                No simulation yet
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RESULTS ================= -->
+
+    <section class="card results-card">
+
+        <div class="card-title">
+
+            <span>▥</span>
+
+            <h2>
+                Results
+            </h2>
+
+        </div>
+
+
+        <div class="metrics-grid">
+
+            <div class="metric">
+
+                <span>▦</span>
+
+                <p>
+                    Processes Allocated
+                </p>
+
+                <strong id="resultAllocated">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <span>×</span>
+
+                <p>
+                    Processes Not Allocated
+                </p>
+
+                <strong id="resultUnallocated">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <span>↔</span>
+
+                <p>
+                    Remaining Memory
+                </p>
+
+                <strong id="resultRemaining">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 OS Lab | Built with HTML, CSS and JavaScript
+    </p>
+
+</footer>
+
+
+<!-- Algorithm Files -->
+<script src="js/memory/first-fit.js"></script>
+<script src="js/memory/best-fit.js"></script>
+<script src="js/memory/worst-fit.js"></script>
+
+<!-- Main Controller -->
+<script src="js/memory/memory-allocation.js"></script>
+
+</body>
+
+</html>
