@@ -32,23 +32,12 @@
     </div>
 
     <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="page-replacement.html" class="active">
-            Page Replacement
-        </a>
-
-        <a href="cpu-scheduling.html">
-            CPU Scheduling
-        </a>
-
-        <a href="disk-scheduling.html">
-            Disk Scheduling
-        </a>
-
+        <a href="index.html">Home</a>
+        <a href="page-replacement.html" class="active">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html">Disk Scheduling</a>
+        <a href="memory-allocation.html">Memory Allocation</a>
+        <a href="history.html">Simulation History</a>
     </nav>
 
     <div class="theme-toggle">
@@ -147,15 +136,15 @@
 
 
                 <div class="control-buttons">
-
                     <button id="simulateBtn">
                         ▷ &nbsp; Simulate
                     </button>
-
                     <button id="resetBtn">
                         ↻ &nbsp; Reset
                     </button>
-
+                    <button id="saveSimBtn" style="display:none;" title="Save simulation results to IndexedDB">
+                        💾 &nbsp; Save Simulation
+                    </button>
                 </div>
 
             </section>
@@ -509,10 +498,11 @@
 <script src="js/visualization/step.js"></script>
 
 
-<!-- =====================================================
-     MAIN SCRIPT
-===================================================== -->
+<!-- STORAGE & COMMON HELPERS -->
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
 
+<!-- MAIN SCRIPT -->
 <script src="js/script.js"></script>
 
 </body>

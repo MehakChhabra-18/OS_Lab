@@ -40,19 +40,12 @@
 
 
     <nav>
-
-        <a href="page-replacement.html">
-            Page Replacement
-        </a>
-
-        <a href="cpu-scheduling.html">
-            CPU Scheduling
-        </a>
-
-        <a href="disk-scheduling.html">
-            Disk Scheduling
-        </a>
-
+        <a href="index.html" class="active">Home</a>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html">Disk Scheduling</a>
+        <a href="memory-allocation.html">Memory Allocation</a>
+        <a href="history.html">Simulation History</a>
     </nav>
 
 
@@ -314,42 +307,58 @@
 
 
             <!-- MEMORY ALLOCATION -->
-
-            <div class="visualizer-card coming-soon">
-
+            <div class="visualizer-card">
                 <div class="card-icon pink-icon">
                     ▦
                 </div>
-
                 <div class="card-content">
-
                     <span class="card-label">
                         MEMORY MANAGEMENT
                     </span>
-
                     <h3>
                         Memory Allocation
                     </h3>
-
                     <p>
                         Visualize how memory is allocated to processes
                         using different allocation strategies.
                     </p>
-
                     <div class="tags">
-
                         <span>First Fit</span>
                         <span>Best Fit</span>
                         <span>Worst Fit</span>
-
                     </div>
-
-                    <span class="coming-label">
-                        COMING SOON
-                    </span>
-
+                    <a href="memory-allocation.html" class="card-link">
+                        Open Visualizer →
+                    </a>
                 </div>
+            </div>
 
+            <!-- SIMULATION HISTORY -->
+            <div class="visualizer-card">
+                <div class="card-icon blue-icon" style="color: #60a5fa;">
+                    📋
+                </div>
+                <div class="card-content">
+                    <span class="card-label">
+                        STORAGE & RECORDS
+                    </span>
+                    <h3>
+                        Simulation History
+                    </h3>
+                    <p>
+                        Review, search, annotate, and manage your saved OS
+                        algorithm simulation records persisted in IndexedDB.
+                    </p>
+                    <div class="tags">
+                        <span>IndexedDB</span>
+                        <span>CRUD</span>
+                        <span>Cookies</span>
+                        <span>Storage</span>
+                    </div>
+                    <a href="history.html" class="card-link">
+                        Open History →
+                    </a>
+                </div>
             </div>
 
 
@@ -518,6 +527,10 @@
     </p>
 
 </footer>
+
+<!-- STORAGE & COMMON SCRIPTS -->
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
 
 </body>
 </html>

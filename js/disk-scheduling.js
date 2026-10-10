@@ -32,6 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextBtn =
         document.getElementById("nextBtn");
 
+    const saveSimBtn =
+        document.getElementById("saveSimBtn");
+
     const canvas =
         document.getElementById("diskCanvas");
 
@@ -522,6 +525,17 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(
             "Simulation started successfully."
         );
+
+        if (saveSimBtn) saveSimBtn.style.display = "block";
+
+        if (window.OSLabStorage) {
+            window.OSLabStorage.Local.saveModuleInputs("disk_scheduling", {
+                algorithm: algorithmSelect.value,
+                initialHead: initialHeadInput.value,
+                requestQueue: requestQueueInput.value
+            });
+            window.OSLabStorage.Session.saveStep("disk_scheduling", 0);
+        }
     }
 
 
@@ -557,6 +571,10 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(
                 `Moved to step ${currentStep}`
             );
+
+            if (window.OSLabStorage && window.OSLabStorage.Session) {
+                window.OSLabStorage.Session.saveStep("disk_scheduling", currentStep);
+            }
         }
     }
 
@@ -580,6 +598,10 @@ document.addEventListener("DOMContentLoaded", () => {
             updateUI();
 
             drawVisualization();
+
+            if (window.OSLabStorage && window.OSLabStorage.Session) {
+                window.OSLabStorage.Session.saveStep("disk_scheduling", currentStep);
+            }
         }
     }
 
@@ -1412,6 +1434,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         nextBtn.disabled = true;
 
+        if (saveSimBtn) saveSimBtn.style.display = "none";
+
+        if (window.OSLabStorage && window.OSLabStorage.Session) {
+            window.OSLabStorage.Session.clearModuleSession("disk_scheduling");
+        }
 
         drawVisualization();
     }
@@ -1519,6 +1546,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetSimulation();
 
+
+    // Save Simulation to IndexedDB (CRUD Create)
+    if (saveSimBtn) {
+        saveSimBtn.addEventListener("click", async function () {
+            if (!simulationStarted || simulationSteps.length === 0) {
+                alert("No simulation data to save. Run a simulation first.");
+                return;
+            }
+
+            const algo = algorithmSelect.value.toUpperCase();
+            const head = initialHead;
+            const reqCount = requests.length;
+            const total = resultSeek.textContent;
+            const avg = resultAverage.textContent;
+
+            const defaultTitle = `${algo} Disk Scheduling (Head: ${head}, ${reqCount} Requests)`;
+            const title = prompt("Enter a title for this simulation record:", defaultTitle);
+            if (title === null) return;
+
+            const notes = prompt("Enter any notes or observations (optional):", "") || "";
+
+            try {
+                await window.OSLabStorage.DB.add({
+                    module: "Disk Scheduling",
+                    algorithm: algo,
+                    title: title.trim() || defaultTitle,
+                    notes: notes.trim(),
+                    input: {
+                        initialHead: head,
+                        requestQueue: requestQueueInput.value.trim(),
+                        requests: [...requests]
+                    },
+                    result: {
+                        totalSeek: total,
+                        avgSeek: avg,
+                        requestsServed: reqCount
+                    }
+                });
+
+                if (window.OSLabStorage && window.OSLabStorage.showToast) {
+                    window.OSLabStorage.showToast("Disk simulation saved to history!", "success");
+                } else {
+                    alert("Disk simulation saved to history!");
+                }
+            } catch (err) {
+                console.error("Save disk simulation failed:", err);
+                alert("Could not save simulation: " + err.message);
+            }
+        });
+    }
+
+    // Restore saved inputs from localStorage
+    if (window.OSLabStorage && window.OSLabStorage.Local) {
+        const savedInputs = window.OSLabStorage.Local.getModuleInputs("disk_scheduling");
+        if (savedInputs) {
+            if (savedInputs.algorithm) algorithmSelect.value = savedInputs.algorithm;
+            if (savedInputs.initialHead) initialHeadInput.value = savedInputs.initialHead;
+            if (savedInputs.requestQueue) requestQueueInput.value = savedInputs.requestQueue;
+        }
+    }
 
     console.log(
         "Disk Scheduling controller ready."

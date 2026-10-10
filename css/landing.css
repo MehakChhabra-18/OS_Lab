@@ -1153,8 +1153,82 @@ footer p {
 
 
     .visualizer-card {
-
         flex-direction: column;
     }
-
 }
+
+/* LIGHT THEME OVERRIDES */
+html.light-theme body,
+body.light-theme {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+body.light-theme .header {
+    background: #ffffff;
+    border-bottom: 1px solid #cbd5e1;
+}
+body.light-theme .header nav a {
+    color: #475569;
+}
+body.light-theme .header nav a:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+body.light-theme .header nav a.active {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #1e3a8a;
+}
+body.light-theme .brand-icon {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+body.light-theme .brand-info h1 {
+    color: #0f172a;
+}
+body.light-theme .brand-info p {
+    color: #64748b;
+}
+body.light-theme .visualizer-card,
+body.light-theme .feature,
+body.light-theme .terminal {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+body.light-theme .visualizer-card h3,
+body.light-theme .feature h3,
+body.light-theme .hero-content h2,
+body.light-theme .section-heading h2 {
+    color: #0f172a;
+}
+body.light-theme .visualizer-card p,
+body.light-theme .feature p,
+body.light-theme .hero-content p,
+body.light-theme .section-heading p {
+    color: #475569;
+}
+body.light-theme .tags span {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+body.light-theme .secondary-btn {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+body.light-theme .terminal {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+body.light-theme .terminal-header {
+    background: #e2e8f0;
+    border-bottom: 1px solid #cbd5e1;
+}
+body.light-theme footer {
+    background: #ffffff;
+    border-top: 1px solid #cbd5e1;
+    color: #64748b;
+}

@@ -25,23 +25,12 @@
     </div>
 
     <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="page-replacement.html" >
-            Page Replacement
-        </a>
-
-        <a href="cpu-scheduling.html" class="active">
-            CPU Scheduling
-        </a>
-
-        <a href="disk-scheduling.html">
-            Disk Scheduling
-        </a>
-
+        <a href="index.html">Home</a>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html" class="active">CPU Scheduling</a>
+        <a href="disk-scheduling.html">Disk Scheduling</a>
+        <a href="memory-allocation.html">Memory Allocation</a>
+        <a href="history.html">Simulation History</a>
     </nav>
 
     <div class="theme-toggle">
@@ -115,7 +104,6 @@
             </div>
 
             <div class="buttons">
-
                 <button
                     id="simulateBtn"
                     class="simulate-btn"
@@ -129,8 +117,16 @@
                 >
                     ⟳ &nbsp; Reset
                 </button>
-
             </div>
+
+            <button
+                id="saveSimBtn"
+                class="save-sim-btn"
+                style="display:none;"
+                title="Save simulation results to IndexedDB"
+            >
+                💾 &nbsp; Save Simulation
+            </button>
 
         </section>
 
@@ -590,6 +586,10 @@
 <script src="js/visualization/timeline.js"></script>
 <script src="js/visualization/step-execution.js"></script>
 <script src="js/visualization/results.js"></script>
+
+<!-- STORAGE & COMMON -->
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
 
 <!-- CONTROLLER -->
 <script src="js/cpu-scheduling.js"></script>

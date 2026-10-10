@@ -28,29 +28,17 @@
     </div>
 
     <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="page-replacement.html">
-            Page Replacement
-        </a>
-
-        <a href="cpu-scheduling.html">
-            CPU Scheduling
-        </a>
-
-        <a href="disk-scheduling.html">
-            Disk Scheduling
-        </a>
-
-        <a href="memory-allocation.html" class="active">
-            Memory Allocation
-        </a>
-
+        <a href="index.html">Home</a>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html">Disk Scheduling</a>
+        <a href="memory-allocation.html" class="active">Memory Allocation</a>
+        <a href="history.html">Simulation History</a>
     </nav>
 
+    <div class="theme-toggle" title="Toggle Theme">
+        ☾
+    </div>
 </header>
 
 
@@ -131,7 +119,6 @@
 
 
         <div class="buttons">
-
             <button
                 id="simulateBtn"
                 class="simulate-btn"
@@ -146,6 +133,15 @@
                 ⟳ &nbsp; Reset
             </button>
 
+            <button
+                id="saveSimBtn"
+                class="save-sim-btn"
+                type="button"
+                style="display:none;"
+                title="Save simulation results to IndexedDB"
+            >
+                💾 &nbsp; Save Simulation
+            </button>
         </div>
 
     </section>
@@ -445,6 +441,10 @@
 <script src="js/memory/first-fit.js"></script>
 <script src="js/memory/best-fit.js"></script>
 <script src="js/memory/worst-fit.js"></script>
+
+<!-- STORAGE & COMMON -->
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
 
 <!-- Main Controller -->
 <script src="js/memory/memory-allocation.js"></script>

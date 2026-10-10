@@ -30,6 +30,9 @@ const previousButton =
 const nextButton =
     document.getElementById("nextBtn");
 
+const saveSimBtn =
+    document.getElementById("saveSimBtn");
+
 const memoryBlocksDisplay =
     document.getElementById("memoryBlocksDisplay");
 
@@ -228,6 +231,16 @@ else {
 
     resultRemaining.textContent = "-";
 
+    if (saveSimBtn) saveSimBtn.style.display = "block";
+
+    if (window.OSLabStorage) {
+        window.OSLabStorage.Local.saveModuleInputs("memory_allocation", {
+            blocks: memoryBlocksInput.value,
+            processes: processesInput.value,
+            algorithm: algorithm
+        });
+        window.OSLabStorage.Session.saveStep("memory_allocation", 0);
+    }
 });
 
 
@@ -250,6 +263,10 @@ nextButton.addEventListener("click", function () {
 
     renderStep(currentStep);
 
+    if (window.OSLabStorage && window.OSLabStorage.Session) {
+        window.OSLabStorage.Session.saveStep("memory_allocation", currentStep);
+    }
+
 });
 
 
@@ -268,6 +285,10 @@ previousButton.addEventListener("click", function () {
     currentStep--;
 
     renderStep(currentStep);
+
+    if (window.OSLabStorage && window.OSLabStorage.Session) {
+        window.OSLabStorage.Session.saveStep("memory_allocation", currentStep);
+    }
 
 });
 
@@ -362,6 +383,11 @@ resetButton.addEventListener("click", function () {
 
     nextButton.disabled = true;
 
+    if (saveSimBtn) saveSimBtn.style.display = "none";
+
+    if (window.OSLabStorage && window.OSLabStorage.Session) {
+        window.OSLabStorage.Session.clearModuleSession("memory_allocation");
+    }
 });
 
 
@@ -919,3 +945,67 @@ function showFinalResults(step) {
         remainingMemory;
 
 }
+
+// Save Simulation to IndexedDB (CRUD Create)
+if (saveSimBtn) {
+    saveSimBtn.addEventListener("click", async function () {
+        if (!simulationSteps || simulationSteps.length === 0) {
+            alert("No simulation data to save. Run a simulation first.");
+            return;
+        }
+
+        const algo = algorithmSelect.value;
+        const algoName = algo === "first-fit" ? "First Fit" : (algo === "best-fit" ? "Best Fit" : "Worst Fit");
+        const allocCount = resultAllocated.textContent !== "-" ? resultAllocated.textContent : "0";
+        const unallocCount = resultUnallocated.textContent !== "-" ? resultUnallocated.textContent : "0";
+        const remMem = resultRemaining.textContent !== "-" ? resultRemaining.textContent : "0";
+
+        const defaultTitle = `${algoName} Memory Allocation (${processes.length} Processes)`;
+        const title = prompt("Enter a title for this simulation record:", defaultTitle);
+        if (title === null) return;
+
+        const notes = prompt("Enter any notes or observations (optional):", "") || "";
+
+        try {
+            await window.OSLabStorage.DB.add({
+                module: "Memory Allocation",
+                algorithm: algoName,
+                title: title.trim() || defaultTitle,
+                notes: notes.trim(),
+                input: {
+                    blocks: memoryBlocksInput.value.trim(),
+                    processes: processesInput.value.trim(),
+                    totalBlocks: originalBlocks.length,
+                    totalProcesses: processes.length
+                },
+                result: {
+                    allocatedCount: allocCount,
+                    unallocatedCount: unallocCount,
+                    remainingMemory: remMem,
+                    totalSteps: simulationSteps.length
+                }
+            });
+
+            if (window.OSLabStorage && window.OSLabStorage.showToast) {
+                window.OSLabStorage.showToast("Memory simulation saved to history!", "success");
+            } else {
+                alert("Memory simulation saved to history!");
+            }
+        } catch (err) {
+            console.error("Save memory simulation failed:", err);
+            alert("Could not save simulation: " + err.message);
+        }
+    });
+}
+
+// Restore saved inputs from localStorage
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.OSLabStorage && window.OSLabStorage.Local) {
+        const savedInputs = window.OSLabStorage.Local.getModuleInputs("memory_allocation");
+        if (savedInputs) {
+            if (savedInputs.algorithm) algorithmSelect.value = savedInputs.algorithm;
+            if (savedInputs.blocks) memoryBlocksInput.value = savedInputs.blocks;
+            if (savedInputs.processes) processesInput.value = savedInputs.processes;
+        }
+    }
+});

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Lab | Simulation History</title>
+    <link rel="stylesheet" href="css/history.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER / NAVBAR
+===================================================== -->
+<header>
+    <div class="brand">
+        <div class="brand-icon">⚙</div>
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html">Disk Scheduling</a>
+        <a href="memory-allocation.html">Memory Allocation</a>
+        <a href="history.html" class="active">Simulation History</a>
+    </nav>
+
+    <div class="theme-toggle" title="Toggle Theme">☾</div>
+</header>
+
+<!-- =====================================================
+     MAIN HISTORY CONTENT
+===================================================== -->
+<main>
+    <div class="history-header">
+        <div class="history-title">
+            <h2>📋 Simulation History & Records</h2>
+            <p>Review, search, annotate, and manage persisted algorithm executions saved in IndexedDB.</p>
+        </div>
+        <div class="history-header-actions">
+            <button id="clearAllBtn" class="btn btn-danger">
+                🗑 Clear All History
+            </button>
+        </div>
+    </div>
+
+    <!-- STATS OVERVIEW -->
+    <section class="history-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <h4 id="statTotal">0</h4>
+                <p>Total Records</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #c084fc;">▤</div>
+            <div class="stat-info">
+                <h4 id="statPage">0</h4>
+                <p>Page Replacement</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #facc15;">▥</div>
+            <div class="stat-info">
+                <h4 id="statCpu">0</h4>
+                <p>CPU Scheduling</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #4ade80;">◈</div>
+            <div class="stat-info">
+                <h4 id="statDisk">0</h4>
+                <p>Disk Scheduling</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #fb7185;">▦</div>
+            <div class="stat-info">
+                <h4 id="statMemory">0</h4>
+                <p>Memory Allocation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILTER & SEARCH CONTROLS -->
+    <div class="history-controls">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All Modules</button>
+            <button class="filter-tab" data-filter="Page Replacement">Page Replacement</button>
+            <button class="filter-tab" data-filter="CPU Scheduling">CPU Scheduling</button>
+            <button class="filter-tab" data-filter="Disk Scheduling">Disk Scheduling</button>
+            <button class="filter-tab" data-filter="Memory Allocation">Memory Allocation</button>
+        </div>
+
+        <div class="search-box">
+            <span style="color: #6079a4; margin-right: 6px;">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search by title, algo, notes...">
+        </div>
+    </div>
+
+    <!-- RECORD CONTAINER -->
+    <div id="historyContainer" class="history-list">
+        <!-- Rendered dynamically by js/history.js -->
+    </div>
+
+    <!-- EMPTY STATE TEMPLATE -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-icon">📂</div>
+        <h3>No Simulation Records Found</h3>
+        <p>You haven't saved any simulations yet, or none match your search filter. Run any algorithm in the visualizers and click "Save Simulation" to record your experiments.</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a href="page-replacement.html" class="btn btn-outline">Page Replacement</a>
+            <a href="cpu-scheduling.html" class="btn btn-outline">CPU Scheduling</a>
+            <a href="disk-scheduling.html" class="btn btn-outline">Disk Scheduling</a>
+            <a href="memory-allocation.html" class="btn btn-outline">Memory Allocation</a>
+        </div>
+    </div>
+</main>
+
+<!-- =====================================================
+     EDIT RECORD MODAL (UPDATE OPERATION)
+===================================================== -->
+<div id="editModal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>✏️ Edit Simulation Record</h3>
+            <button id="closeEditModal" class="modal-close">&times;</button>
+        </div>
+        <form id="editForm">
+            <input type="hidden" id="editId">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editTitle">Simulation Title</label>
+                    <input type="text" id="editTitle" required placeholder="e.g. Belady's Anomaly Test with 4 Frames">
+                </div>
+                <div class="form-group">
+                    <label for="editNotes">Notes / Observations</label>
+                    <textarea id="editNotes" rows="4" placeholder="Enter findings, observations, or lab experiment notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelEditBtn" class="btn btn-outline">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================
+     VIEW DETAILS MODAL (READ OPERATION)
+===================================================== -->
+<div id="detailsModal" class="modal-overlay" style="display: none;">
+    <div class="modal" style="max-width: 680px;">
+        <div class="modal-header">
+            <h3 id="detailsTitle">🔍 Simulation Details</h3>
+            <button id="closeDetailsModal" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <pre id="detailsJson" class="details-code"></pre>
+        </div>
+        <div class="modal-footer">
+            <button id="closeDetailsBtn" class="btn btn-outline">Close</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 OS Lab | Built with HTML5, CSS3, and Vanilla JavaScript</p>
+</footer>
+
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>

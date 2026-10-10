@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const principleTitle = document.getElementById("principleTitle");
     const principleText = document.getElementById("principleText");
     const rrQueueContainer = document.getElementById("rrQueueContainer");
+    const saveSimBtn = document.getElementById("saveSimBtn");
 
     /* =========================================================
        STATE
@@ -269,6 +270,19 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update navigation button states
         previousBtn.disabled = true;
         nextBtn.disabled = totalSteps === 0;
+
+        // Show Save Simulation button
+        if (saveSimBtn) saveSimBtn.style.display = "block";
+
+        // Persist to localStorage & sessionStorage
+        if (window.OSLabStorage) {
+            window.OSLabStorage.Local.saveModuleInputs("cpu_scheduling", {
+                algorithm: algo,
+                processCount: processCountInput.value,
+                timeQuantum: timeQuantumInput ? timeQuantumInput.value : null
+            });
+            window.OSLabStorage.Session.saveStep("cpu_scheduling", 0);
+        }
     }
 
     /* =========================================================
@@ -291,6 +305,10 @@ document.addEventListener("DOMContentLoaded", function () {
         previousBtn.disabled = false;
         if (currentStep >= totalSteps) {
             nextBtn.disabled = true;
+        }
+
+        if (window.OSLabStorage && window.OSLabStorage.Session) {
+            window.OSLabStorage.Session.saveStep("cpu_scheduling", currentStep);
         }
     }
 
@@ -319,6 +337,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             nextBtn.disabled = false;
         }
+
+        if (window.OSLabStorage && window.OSLabStorage.Session) {
+            window.OSLabStorage.Session.saveStep("cpu_scheduling", currentStep);
+        }
     }
 
     /* =========================================================
@@ -342,6 +364,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         previousBtn.disabled = true;
         nextBtn.disabled = true;
+
+        if (saveSimBtn) saveSimBtn.style.display = "none";
+        if (window.OSLabStorage && window.OSLabStorage.Session) {
+            window.OSLabStorage.Session.clearModuleSession("cpu_scheduling");
+        }
     }
 
     function handleReset() {
@@ -359,6 +386,77 @@ document.addEventListener("DOMContentLoaded", function () {
     resetBtn.addEventListener("click", handleReset);
     nextBtn.addEventListener("click", handleNext);
     previousBtn.addEventListener("click", handlePrevious);
+
+    // Save Simulation to IndexedDB (CRUD Create)
+    if (saveSimBtn) {
+        saveSimBtn.addEventListener("click", async function () {
+            if (!window.currentSimulation || !window.currentSimulation.processes) {
+                alert("No simulation data to save. Run a simulation first.");
+                return;
+            }
+
+            const algo = algorithmSelect.value.toUpperCase();
+            const count = processCountInput.value;
+            const avgWT = document.getElementById("avgWaiting") ? document.getElementById("avgWaiting").textContent : "-";
+            const avgTAT = document.getElementById("avgTurnaround") ? document.getElementById("avgTurnaround").textContent : "-";
+            const avgRT = document.getElementById("avgResponse") ? document.getElementById("avgResponse").textContent : "-";
+
+            const defaultTitle = `${algo} CPU Scheduling (${count} Processes)`;
+            const title = prompt("Enter a title for this simulation record:", defaultTitle);
+            if (title === null) return;
+
+            const notes = prompt("Enter any notes or observations (optional):", "") || "";
+
+            try {
+                await window.OSLabStorage.DB.add({
+                    module: "CPU Scheduling",
+                    algorithm: algo,
+                    title: title.trim() || defaultTitle,
+                    notes: notes.trim(),
+                    input: {
+                        algorithm: algo,
+                        processCount: count,
+                        processes: window.currentSimulation.processes.map(p => ({
+                            id: p.id,
+                            arrivalTime: p.arrivalTime,
+                            burstTime: p.burstTime,
+                            priority: p.priority
+                        }))
+                    },
+                    result: {
+                        avgWaiting: avgWT,
+                        avgTurnaround: avgTAT,
+                        avgResponse: avgRT,
+                        totalSteps: totalSteps
+                    }
+                });
+
+                if (window.OSLabStorage && window.OSLabStorage.showToast) {
+                    window.OSLabStorage.showToast("CPU simulation saved to history!", "success");
+                } else {
+                    alert("CPU simulation saved to history!");
+                }
+            } catch (err) {
+                console.error("Save failed:", err);
+                alert("Could not save simulation: " + err.message);
+            }
+        });
+    }
+
+    // Restore saved algorithm from localStorage if present
+    if (window.OSLabStorage && window.OSLabStorage.Local) {
+        const savedInputs = window.OSLabStorage.Local.getModuleInputs("cpu_scheduling");
+        if (savedInputs) {
+            if (savedInputs.algorithm) {
+                algorithmSelect.value = savedInputs.algorithm;
+                onAlgorithmChange();
+            }
+            if (savedInputs.processCount) {
+                processCountInput.value = savedInputs.processCount;
+                createProcessInputs();
+            }
+        }
+    }
 
     // Initial setup
     updatePrinciple(algorithmSelect.value);

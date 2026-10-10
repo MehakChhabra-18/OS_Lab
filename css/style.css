@@ -694,3 +694,91 @@ footer{
         min-width:100px;
     }
 }
+
+/* SAVE SIMULATION BUTTON */
+#saveSimBtn {
+    grid-column: span 2;
+    background: #0f766e;
+    border-color: #14b8a6;
+    color: #ccfbf1;
+    display: none;
+}
+#saveSimBtn:hover {
+    background: #0d9488;
+}
+
+/* LIGHT THEME OVERRIDES */
+html.light-theme body,
+body.light-theme {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+body.light-theme header {
+    background: #ffffff;
+    border-bottom: 1px solid #cbd5e1;
+}
+body.light-theme header nav a {
+    color: #475569;
+}
+body.light-theme header nav a:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+body.light-theme header nav a.active {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #1e3a8a;
+}
+body.light-theme .brand-icon {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+body.light-theme .brand h1 {
+    color: #0f172a;
+}
+body.light-theme .brand p {
+    color: #64748b;
+}
+body.light-theme .input-card,
+body.light-theme .result-card,
+body.light-theme .history-card,
+body.light-theme .visualization-card,
+body.light-theme .principle-card {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+body.light-theme .input-card h3,
+body.light-theme .result-card h3,
+body.light-theme .history-card h3,
+body.light-theme .visualization-card h3,
+body.light-theme .principle-card h3 {
+    color: #0f172a;
+}
+body.light-theme .input-group label {
+    color: #334155;
+}
+body.light-theme .input-group input,
+body.light-theme .input-group select {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+body.light-theme .card,
+body.light-theme .info-card {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+body.light-theme .card span,
+body.light-theme .info-card span {
+    color: #64748b;
+}
+body.light-theme .card strong,
+body.light-theme .info-card strong {
+    color: #0f172a;
+}
+body.light-theme footer {
+    background: #ffffff;
+    border-top: 1px solid #cbd5e1;
+    color: #64748b;
+}
