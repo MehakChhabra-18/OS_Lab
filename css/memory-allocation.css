@@ -13,115 +13,14 @@ body{
     background:#070d1a;
     color:#e8ecff;
     line-height:1.6;
+    /* Room for the fixed Prev/Next action bar so the footer is never
+       trapped underneath it at the end of the page. */
+    padding-bottom:80px;
 }
 
-/* ================= HEADER ================= */
-
-.header{
-    min-height:78px;
-    padding:0 32px;
-
-    background:#0b172d;
-    border-bottom:1px solid #26385d;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    position:sticky;
-    top:0;
-
-    z-index:100;
-}
-
-/* ================= BRAND ================= */
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:14px;
-
-    flex-shrink:0;
-}
-
-.brand-icon{
-    width:46px;
-    height:46px;
-
-    border:2px solid #6c63ff;
-    border-radius:9px;
-
-    background:#101936;
-    color:#ffc83d;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:22px;
-}
-
-.brand h1{
-    font-size:27px;
-    line-height:1.1;
-
-    color:#f5f7ff;
-}
-
-.brand h1 span{
-    color:#ffc83d;
-}
-
-.brand p{
-    font-size:11px;
-    color:#8e9bbb;
-}
-
-/* ================= NAVIGATION ================= */
-
-nav{
-    display:flex;
-    align-items:center;
-    gap:28px;
-}
-
-nav a{
-    position:relative;
-
-    color:#cbd4eb;
-    text-decoration:none;
-
-    font-size:14px;
-    font-weight:500;
-
-    padding:30px 0 25px;
-
-    white-space:nowrap;
-
-    transition:.2s;
-}
-
-nav a:hover{
-    color:#ffffff;
-}
-
-nav a.active{
-    color:#ffffff;
-}
-
-nav a.active::after{
-    content:"";
-
-    position:absolute;
-
-    left:0;
-    right:0;
-    bottom:0;
-
-    height:3px;
-
-    background:#ffc83d;
-}
+/* ============ HEADER / NAVBAR / FOOTER ============
+   provided by the shared css/navbar.css
+   ================================================= */
 
 /* ================= MAIN ================= */
 
@@ -245,6 +144,8 @@ main{
     border-radius:7px;
 
     padding:12px 22px;
+
+    min-height:44px;
 
     font-size:14px;
 
@@ -634,6 +535,8 @@ main{
 .navigation button{
     padding:10px 20px;
 
+    min-height:44px;
+
     border-radius:6px;
 
     border:1px solid #344a72;
@@ -743,35 +646,11 @@ main{
     font-size:25px;
 }
 
-/* ================= FOOTER ================= */
-
-footer{
-    padding:25px;
-
-    text-align:center;
-
-    border-top:1px solid #202f53;
-
-    background:#080f1d;
-}
-
-footer p{
-    color:#687694;
-
-    font-size:12px;
-}
+/* FOOTER: provided by the shared css/navbar.css */
 
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:1100px){
-
-    nav{
-        gap:18px;
-    }
-
-    nav a{
-        font-size:12px;
-    }
 
     .memory-visualization{
         grid-template-columns:1fr;
@@ -779,14 +658,6 @@ footer p{
 }
 
 @media(max-width:900px){
-
-    .header{
-        padding:0 20px;
-    }
-
-    nav{
-        display:none;
-    }
 
     main{
         padding:25px 20px 50px;
@@ -815,14 +686,6 @@ footer p{
         padding:20px 12px 40px;
     }
 
-    .brand p{
-        display:none;
-    }
-
-    .brand h1{
-        font-size:22px;
-    }
-
     .buttons{
         flex-direction:column;
     }
@@ -847,16 +710,23 @@ footer p{
     .memory-visualization{
         padding:20px;
     }
+
+    .card-title{
+        flex-wrap:wrap;
+    }
+
+    .navigation{
+        flex-wrap:wrap;
+
+        gap:12px;
+    }
+
+    .navigation button{
+        flex:1 1 130px;
+    }
 }
 
-/* THEME TOGGLE */
-.theme-toggle {
-    color: #8ba9e8;
-    font-size: 21px;
-    width: 40px;
-    text-align: center;
-    cursor: pointer;
-}
+/* THEME TOGGLE: provided by the shared css/navbar.css */
 
 /* SAVE SIMULATION BUTTON */
 .save-sim-btn {
@@ -882,33 +752,7 @@ body.light-theme {
     background: #f1f5f9;
     color: #0f172a;
 }
-body.light-theme header,
-body.light-theme .header {
-    background: #ffffff;
-    border-bottom: 1px solid #cbd5e1;
-}
-body.light-theme nav a {
-    color: #475569;
-}
-body.light-theme nav a:hover {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-body.light-theme nav a.active {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-    color: #1e3a8a;
-}
-body.light-theme .brand-icon {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-}
-body.light-theme .brand h1 {
-    color: #0f172a;
-}
-body.light-theme .brand p {
-    color: #64748b;
-}
+/* HEADER / NAVBAR light-theme: shared css/navbar.css */
 body.light-theme .card {
     background: #ffffff;
     border-color: #cbd5e1;
@@ -938,8 +782,165 @@ body.light-theme .info-box span,
 body.light-theme .metric p {
     color: #64748b;
 }
-body.light-theme footer {
-    background: #ffffff;
-    border-top: 1px solid #cbd5e1;
+/* .step-counter sits inside .card-title, so it must out-specify the
+   `body.light-theme .card-title span` rule above (which would otherwise
+   paint #0f172a text on its dark pill); !important beats the base rule's
+   `color:#9daaca !important`. */
+body.light-theme .card-title .step-counter {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569 !important;
+}
+body.light-theme #movementText {
+    color: #475569;
+}
+body.light-theme .memory-column h3,
+body.light-theme .allocation-column h3 {
+    color: #475569;
+}
+/* Light tiles to match .info-box / .metric above. */
+body.light-theme .memory-block {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+body.light-theme .memory-block.allocated {
+    background: #fffbeb;
+    border-color: #d97706;
+}
+/* Re-assert state borders the rule above would override. */
+body.light-theme .memory-block.current {
+    border-color: #6c63ff;
+}
+body.light-theme .block-title {
+    color: #0f172a;
+}
+body.light-theme .block-size,
+body.light-theme .block-remaining {
     color: #64748b;
+}
+body.light-theme .block-process {
+    color: #b45309;
+}
+body.light-theme .allocation-item {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+body.light-theme .allocation-item.success {
+    border-color: #2f9d76;
+}
+body.light-theme .allocation-item.failed {
+    border-color: #8c4250;
+}
+/* .process-label has no color of its own and used to inherit the dark
+   body color onto this tile's old dark background (invisible text). */
+body.light-theme .process-label {
+    color: #0f172a;
+}
+body.light-theme .success .allocation-status {
+    color: #15803d;
+}
+body.light-theme .failed .allocation-status {
+    color: #be123c;
+}
+body.light-theme .legend-item {
+    color: #64748b;
+}
+body.light-theme .allocated-dot {
+    background: #d97706;
+}
+body.light-theme .order-item {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+body.light-theme .order-item span {
+    color: #b45309;
+}
+body.light-theme .metric > span {
+    color: #b45309;
+}
+body.light-theme select option {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+/* =========================================================
+   STICKY ACTION BAR (Prev / Next)
+   The step card sits between the visualization and the
+   allocation-order / results cards, so the buttons were
+   buried at the bottom of the page: users had to scroll
+   down to advance and back up to watch the blocks change.
+   Pinning the bar to the viewport keeps both in reach.
+   Declared after the media queries so it wins over their
+   flex-wrap / gap overrides.
+   ========================================================= */
+
+.navigation {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900; /* under the cookie banner (9999) and header (1000) */
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 12px 25px;
+    background: #0c172b;
+    border-top: 1px solid #243553;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================
+   LIGHT THEME — EXPLANATION / RESET / ACTION BAR / DIVIDERS
+   The earlier light pass covered cards, tiles, inputs and
+   tables; these areas still stayed dark.
+   ========================================================= */
+
+body.light-theme .explanation {
+    background: #fffbeb;
+    border-left-color: #d97706;
+}
+
+body.light-theme .explanation h3 {
+    color: #b45309;
+}
+
+body.light-theme .explanation p {
+    color: #334155;
+}
+
+body.light-theme .reset-btn {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-theme .reset-btn:hover {
+    color: #92400e;
+    border-color: #b45309 !important;
+}
+
+body.light-theme .navigation {
+    background: #ffffff;
+    border-top-color: #e2e8f0;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.10);
+}
+
+body.light-theme .navigation button {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body.light-theme .navigation button:hover:not(:disabled) {
+    border-color: #6c63ff;
+    color: #4f46e5;
+}
+
+body.light-theme .card-title,
+body.light-theme .step-header {
+    border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .empty-state {
+    border-color: #cbd5e1;
 }

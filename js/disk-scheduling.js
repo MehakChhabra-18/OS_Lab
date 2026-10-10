@@ -188,14 +188,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function parseRequests() {
 
-        return requestQueueInput.value
-            .split(",")
-            .map(value =>
-                Number(value.trim())
-            )
-            .filter(value =>
-                Number.isFinite(value)
-            );
+        const tokens =
+            requestQueueInput.value
+                .split(",")
+                .map(value => value.trim())
+                .filter(value => value !== "");
+
+
+        const queue = [];
+
+
+        for (const token of tokens) {
+
+            const value =
+                Number(token);
+
+
+            if (!Number.isFinite(value)) {
+
+                alert(
+                    `"${token}" is not a valid disk request. ` +
+                    `Please enter track numbers separated by commas.`
+                );
+
+                return null;
+            }
+
+
+            queue.push(value);
+        }
+
+
+        return queue;
     }
 
 
@@ -210,6 +234,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const queue =
             parseRequests();
+
+
+        if (queue === null) {
+
+            return false;
+        }
 
 
         if (!Number.isFinite(head)) {
@@ -410,6 +440,17 @@ document.addEventListener("DOMContentLoaded", () => {
         let total = 0;
 
 
+        /*
+         * Every entry in the generated sequence becomes
+         * one head movement, including the terminal legs
+         * injected by SCAN (199) and C-SCAN (199 plus the
+         * 199 → 0 return jump). The total seek distance
+         * below therefore counts ALL actual head travel,
+         * so it stays consistent with the sequence shown
+         * in the request order list.
+         */
+
+
         sequence.forEach(
             (destination, index) => {
 
@@ -476,6 +517,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         requests =
             parseRequests();
+
+
+        if (!requests) {
+
+            return;
+        }
 
 
         const sequence =
@@ -753,24 +800,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateResults() {
 
+        /*
+         * All metrics are derived from the generated
+         * sequence (one step per head movement), NOT
+         * from the raw request input: every algorithm
+         * removes consecutive duplicate positions, and
+         * SCAN / C-SCAN append terminal legs (199 and
+         * the C-SCAN return to 0), so the sequence
+         * length and the served count can both differ
+         * from requests.length.
+         */
+
+        const movements =
+            simulationSteps.length;
+
+
         const total =
-            simulationSteps.length > 0
+            movements > 0
                 ? simulationSteps[
-                    simulationSteps.length - 1
+                    movements - 1
                   ].total
                 : 0;
 
 
-        const count =
-            requests.length;
-
+        /*
+         * Average seek per head movement.
+         *
+         * Denominator = movements: the number of head
+         * movements actually made (one per step /
+         * sequence entry), NOT the raw request count.
+         */
 
         const average =
-            count > 0
+            movements > 0
                 ? (
-                    total / count
+                    total / movements
                   ).toFixed(2)
                 : "0.00";
+
+
+        /*
+         * Requests served = entries in the sequence that
+         * correspond to positions the user actually
+         * requested. Terminal legs injected by SCAN /
+         * C-SCAN (199 and/or 0) are counted only when
+         * they were part of the request queue.
+         */
+
+        const requestedPositions =
+            new Set(requests);
+
+
+        const served =
+            simulationSteps.filter(
+                step =>
+                    requestedPositions.has(step.to)
+            ).length;
 
 
         resultSeek.textContent =
@@ -778,7 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         resultRequests.textContent =
-            count;
+            served;
 
 
         resultAverage.textContent =
@@ -790,6 +875,52 @@ document.addEventListener("DOMContentLoaded", () => {
        DRAW VISUALIZATION
        ===================================================== */
 
+    /* =====================================================
+       DRAW PALETTE (theme-aware, resolved at draw time)
+       ===================================================== */
+
+    function getDrawPalette() {
+
+        const isLight =
+            document.documentElement
+                .classList
+                .contains("light-theme");
+
+
+        if (isLight) {
+
+            return {
+                background: "#f8fafc",
+                axis: "#94a3b8",
+                axisNumber: "#64748b",
+                requestDot: "#f59e0b",
+                requestLabel: "#334155",
+                head: "#ff3d9a",
+                headLabel: "#be185d",
+                path: "#ff3d9a",
+                destination: "#ffffff",
+                distanceLabel: "#be185d",
+                stepLabel: "#64748b"
+            };
+        }
+
+
+        return {
+            background: "#0a1830",
+            axis: "#52688f",
+            axisNumber: "#93a6c5",
+            requestDot: "#ffbf3f",
+            requestLabel: "#dce5f5",
+            head: "#ff3d9a",
+            headLabel: "#ff5cab",
+            path: "#ff3d9a",
+            destination: "#ffffff",
+            distanceLabel: "#ff9dcc",
+            stepLabel: "#8fa4c5"
+        };
+    }
+
+
     function drawVisualization() {
 
         if (
@@ -798,6 +929,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
             return;
         }
+
+
+        const palette =
+            getDrawPalette();
 
 
         /* -----------------------------------------------
@@ -817,7 +952,7 @@ document.addEventListener("DOMContentLoaded", () => {
            ----------------------------------------------- */
 
         ctx.fillStyle =
-            "#0a1830";
+            palette.background;
 
 
         ctx.fillRect(
@@ -860,7 +995,7 @@ document.addEventListener("DOMContentLoaded", () => {
            ----------------------------------------------- */
 
         ctx.strokeStyle =
-            "#52688f";
+            palette.axis;
 
         ctx.lineWidth = 3;
 
@@ -891,6 +1026,21 @@ document.addEventListener("DOMContentLoaded", () => {
             "13px Arial";
 
 
+        /*
+         * Label density adapts to the available width so
+         * the numbers never overlap on phone screens.
+         * Ticks are still drawn every 10 tracks; only the
+         * printed number is thinned out.
+         */
+
+        const labelStep =
+            usableWidth < 420
+                ? 50
+                : usableWidth < 660
+                    ? 20
+                    : 10;
+
+
         for (
             let value = 0;
             value <= 190;
@@ -902,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             ctx.strokeStyle =
-                "#52688f";
+                palette.axis;
 
             ctx.lineWidth = 1;
 
@@ -922,15 +1072,20 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.stroke();
 
 
-            ctx.fillStyle =
-                "#93a6c5";
+            if (
+                value % labelStep === 0
+            ) {
+
+                ctx.fillStyle =
+                    palette.axisNumber;
 
 
-            ctx.fillText(
-                value,
-                x,
-                axisY - 20
-            );
+                ctx.fillText(
+                    value,
+                    x,
+                    axisY - 20
+                );
+            }
         }
 
 
@@ -943,7 +1098,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.strokeStyle =
-            "#52688f";
+            palette.axis;
 
 
         ctx.beginPath();
@@ -962,7 +1117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.fillStyle =
-            "#93a6c5";
+            palette.axisNumber;
 
 
         ctx.fillText(
@@ -999,11 +1154,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.fillStyle =
-                    "#ffbf3f";
+                    palette.requestDot;
 
 
                 ctx.shadowColor =
-                    "#ffbf3f";
+                    palette.requestDot;
 
 
                 ctx.shadowBlur =
@@ -1017,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.fillStyle =
-                    "#dce5f5";
+                    palette.requestLabel;
 
 
                 ctx.font =
@@ -1053,11 +1208,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.fillStyle =
-            "#ff3d9a";
+            palette.head;
 
 
         ctx.shadowColor =
-            "#ff3d9a";
+            palette.head;
 
 
         ctx.shadowBlur =
@@ -1071,7 +1226,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.fillStyle =
-            "#ff5cab";
+            palette.headLabel;
 
 
         ctx.font =
@@ -1158,12 +1313,12 @@ document.addEventListener("DOMContentLoaded", () => {
                    ----------------------------------------- */
 
                 ctx.strokeStyle =
-                    "#ff3d9a";
+                    palette.path;
 
                 ctx.lineWidth = 2.5;
 
                 ctx.shadowColor =
-                    "#ff3d9a";
+                    palette.path;
 
                 ctx.shadowBlur = 7;
 
@@ -1234,13 +1389,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.fillStyle =
-                    "#ffffff";
+                    palette.destination;
 
                 ctx.fill();
 
 
                 ctx.strokeStyle =
-                    "#ff3d9a";
+                    palette.path;
 
                 ctx.lineWidth = 2.5;
 
@@ -1259,7 +1414,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 ctx.fillStyle =
-                    "#ff9dcc";
+                    palette.distanceLabel;
 
 
                 ctx.font =
@@ -1278,7 +1433,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    ----------------------------------------- */
 
                 ctx.fillStyle =
-                    "#8fa4c5";
+                    palette.stepLabel;
 
 
                 ctx.font =
@@ -1308,8 +1463,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const size = 9;
 
 
+        const palette =
+            getDrawPalette();
+
+
         ctx.fillStyle =
-            "#ff3d9a";
+            palette.path;
 
 
         ctx.beginPath();
@@ -1547,6 +1706,29 @@ document.addEventListener("DOMContentLoaded", () => {
     resetSimulation();
 
 
+    /* =====================================================
+       THEME CHANGE REDRAW
+       ===================================================== */
+
+    window.addEventListener(
+        "oslab:themechange",
+        () => {
+
+            try {
+
+                drawVisualization();
+
+            } catch (_) {
+
+                /*
+                 * Never let a theme switch throw
+                 * when the canvas/context is missing.
+                 */
+            }
+        }
+    );
+
+
     // Save Simulation to IndexedDB (CRUD Create)
     if (saveSimBtn) {
         saveSimBtn.addEventListener("click", async function () {
@@ -1558,6 +1740,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const algo = algorithmSelect.value.toUpperCase();
             const head = initialHead;
             const reqCount = requests.length;
+            const servedCount = resultRequests.textContent;
             const total = resultSeek.textContent;
             const avg = resultAverage.textContent;
 
@@ -1581,7 +1764,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     result: {
                         totalSeek: total,
                         avgSeek: avg,
-                        requestsServed: reqCount
+                        requestsServed: servedCount
                     }
                 });
 

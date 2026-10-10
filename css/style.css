@@ -12,183 +12,9 @@ body{
 }
 
 /* =========================
-   COMMON HEADER / NAVBAR
+   HEADER / NAVBAR / FOOTER
+   provided by the shared css/navbar.css
 ========================= */
-
-/* ============================= */
-/* NAVBAR - OS LAB */
-/* ============================= */
-
-header {
-    height: 104px;
-    padding: 0 40px;
-
-    background: #0b172d;
-    border-bottom: 1px solid #26385d;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/* ============================= */
-/* BRAND */
-/* ============================= */
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.brand-icon {
-    width: 52px;
-    height: 52px;
-
-    border: 1px solid #41618f;
-    border-radius: 15px;
-
-    background: #101d38;
-    color: #ffc83d;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 23px;
-
-    box-shadow: 0 0 20px rgba(65, 97, 143, 0.15);
-}
-
-.brand > div:last-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.brand h1 {
-    margin: 0;
-
-    font-size: 29px;
-    line-height: 1.1;
-
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.brand h1 span {
-    color: #7898ff;
-}
-
-.brand p {
-    margin: 4px 0 0;
-
-    color: #7f9bd0;
-
-    font-size: 13px;
-}
-
-/* ============================= */
-/* NAVIGATION */
-/* ============================= */
-
-header nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-header nav a {
-    position: relative;
-
-    padding: 12px 17px;
-
-    color: #aebfe4;
-
-    text-decoration: none;
-
-    font-size: 15px;
-    font-weight: 500;
-
-    border: 1px solid transparent;
-    border-radius: 10px;
-
-    transition: all 0.2s ease;
-}
-
-header nav a:hover {
-    color: #ffffff;
-}
-
-header nav a.active {
-    color: #ffffff;
-
-    background: #172b50;
-
-    border-color: #36598d;
-}
-
-/* ============================= */
-/* THEME ICON */
-/* ============================= */
-
-.theme-toggle {
-    color: #8ba9e8;
-
-    font-size: 21px;
-
-    width: 40px;
-    text-align: center;
-
-    cursor: pointer;
-}
-
-/* ============================= */
-/* RESPONSIVE */
-/* ============================= */
-
-@media (max-width: 900px) {
-
-    header {
-        padding: 0 20px;
-    }
-
-    header nav {
-        gap: 4px;
-    }
-
-    header nav a {
-        padding: 10px 11px;
-        font-size: 13px;
-    }
-
-    .brand p {
-        display: none;
-    }
-
-}
-
-@media (max-width: 700px) {
-
-    header {
-        height: auto;
-        min-height: 80px;
-        padding: 12px 18px;
-    }
-
-    header nav {
-        display: none;
-    }
-
-    .theme-toggle {
-        display: block;
-    }
-
-}
 
 /* MAIN */
 
@@ -200,7 +26,10 @@ main{
     max-width:1480px;
     margin:auto;
     display:grid;
-    grid-template-columns:32% 68%;
+    /* 32/68 proportion without the % + gap overflow:
+       percentages summed to 100% and the 24px gap pushed the grid
+       24px past its container on every page load. */
+    grid-template-columns:minmax(0,32fr) minmax(0,68fr);
     gap:24px;
 }
 
@@ -272,6 +101,14 @@ main{
 .input-group select:focus{
     border-color:#6366f1;
     box-shadow:0 0 0 2px rgba(99,102,241,.18);
+}
+
+/* outline:none above removes the default ring — give keyboard users
+   an explicit :focus-visible replacement (matches navbar.css). */
+.input-group input:focus-visible,
+.input-group select:focus-visible{
+    outline:2px solid #6366f1;
+    outline-offset:2px;
 }
 
 /* BUTTONS */
@@ -359,6 +196,13 @@ main{
     overflow:hidden;
 }
 
+/* The wrapper already exists in page-replacement.html — scope the
+   table's horizontal scroll to it (same rule as scheduling.css)
+   so wide tables can never push the page sideways. */
+.table-wrapper{
+    overflow-x:auto;
+}
+
 #historyTable{
     width:100%;
     border-collapse:collapse;
@@ -432,6 +276,7 @@ main{
 
 .speed-control input{
     width:170px;
+    min-width:0;
     accent-color:#fbbf24;
     cursor:pointer;
 }
@@ -624,17 +469,7 @@ main{
     font-size:14px;
 }
 
-/* FOOTER */
-
-footer{
-    margin-top:15px;
-    padding:16px;
-    text-align:center;
-    color:#7f90b7;
-    border-top:1px solid #1e3152;
-    background:#09152a;
-    font-size:13px;
-}
+/* FOOTER: provided by the shared css/navbar.css */
 
 /* RESPONSIVE */
 
@@ -653,21 +488,6 @@ footer{
 }
 
 @media(max-width:650px){
-    header{
-        height:auto;
-        padding:18px;
-        flex-direction:column;
-        gap:18px;
-    }
-
-    .logo-text p{
-        display:none;
-    }
-
-    nav{
-        gap:18px;
-    }
-
     main{
         padding:15px;
     }
@@ -713,32 +533,7 @@ body.light-theme {
     background: #f1f5f9;
     color: #0f172a;
 }
-body.light-theme header {
-    background: #ffffff;
-    border-bottom: 1px solid #cbd5e1;
-}
-body.light-theme header nav a {
-    color: #475569;
-}
-body.light-theme header nav a:hover {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-body.light-theme header nav a.active {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-    color: #1e3a8a;
-}
-body.light-theme .brand-icon {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-}
-body.light-theme .brand h1 {
-    color: #0f172a;
-}
-body.light-theme .brand p {
-    color: #64748b;
-}
+/* HEADER / NAVBAR light-theme: shared css/navbar.css */
 body.light-theme .input-card,
 body.light-theme .result-card,
 body.light-theme .history-card,
@@ -764,21 +559,110 @@ body.light-theme .input-group select {
     border-color: #cbd5e1;
     color: #0f172a;
 }
-body.light-theme .card,
-body.light-theme .info-card {
-    background: #f8fafc;
-    border-color: #e2e8f0;
-}
-body.light-theme .card span,
-body.light-theme .info-card span {
+body.light-theme .input-group input::placeholder {
     color: #64748b;
 }
-body.light-theme .card strong,
-body.light-theme .info-card strong {
+body.light-theme #resetBtn {
+    color: #4338ca;
+}
+body.light-theme #resetBtn:hover {
+    background: #eef2ff;
+}
+body.light-theme .result-box {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+body.light-theme .result-box strong {
     color: #0f172a;
 }
-body.light-theme footer {
-    background: #ffffff;
-    border-top: 1px solid #cbd5e1;
+body.light-theme .result-box span {
     color: #64748b;
+}
+body.light-theme #pageFaults {
+    color: #e11d48;
+}
+body.light-theme #pageHits {
+    color: #15803d;
+}
+body.light-theme #hitRatio {
+    color: #a16207;
+}
+body.light-theme #historyTable th {
+    background: #e2e8f0;
+    color: #334155;
+}
+body.light-theme #historyTable td {
+    color: #1e293b;
+    border-bottom-color: #e2e8f0;
+}
+body.light-theme .history-fault {
+    color: #e11d48 !important;
+}
+body.light-theme .history-hit {
+    color: #15803d !important;
+}
+body.light-theme .speed-control {
+    color: #334155;
+}
+body.light-theme .speed-control input {
+    accent-color: #b45309;
+}
+body.light-theme .navigation button:disabled {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #94a3b8;
+}
+body.light-theme #navigationStep {
+    color: #4338ca;
+}
+body.light-theme .principle-card p {
+    color: #334155;
+}
+
+/* VISUALIZATION STAGE
+   js/visualization/canvas.js repaints the frames with its light palette
+   (white boxes, indigo title, dark numbers), so the stage behind it and
+   every tile inside it must flip too — otherwise a light canvas sits on
+   the dark navy stage with an unreadable indigo title. */
+body.light-theme .visualization-area {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    border-color: #cbd5e1;
+}
+body.light-theme .reference-section h4 {
+    color: #334155;
+}
+body.light-theme .reference-page {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+/* Same amber identity as the dark theme, darkened for a light surface. */
+body.light-theme .reference-page.active {
+    background: #fffbeb;
+    border-color: #d97706;
+    color: #b45309;
+    box-shadow: 0 5px 15px rgba(217, 119, 6, .15);
+}
+body.light-theme .canvas-container {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+body.light-theme .info-box {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+body.light-theme .info-box span {
+    color: #64748b;
+}
+body.light-theme .info-box strong {
+    color: #0f172a;
+}
+body.light-theme #currentResult.fault {
+    color: #e11d48;
+}
+body.light-theme #currentResult.hit {
+    color: #15803d;
+}
+body.light-theme .explanation-box p {
+    color: #475569;
 }

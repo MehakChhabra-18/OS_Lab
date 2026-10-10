@@ -232,13 +232,18 @@ document.addEventListener("DOMContentLoaded", function () {
             result = fn(processes);
         } else if (algo === "roundrobin") {
             const q = Number(timeQuantumInput.value);
-            if (isNaN(q) || q < 1) {
+            if (!Number.isInteger(q) || q < 1) {
                 alert("Time Quantum must be an integer >= 1.");
                 return;
             }
             const fn = typeof roundrobin === "function" ? roundrobin : (typeof roundRobin === "function" ? roundRobin : (window.roundrobin || window.roundRobin));
             if (!fn) { alert("Round Robin module is not loaded."); return; }
-            result = fn(processes, q);
+            try {
+                result = fn(processes, q);
+            } catch (err) {
+                alert(err.message);
+                return;
+            }
         } else {
             alert("Selected algorithm is not supported.");
             return;

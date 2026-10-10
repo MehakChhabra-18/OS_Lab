@@ -5,7 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OS Lab | Simulation History</title>
+    <!-- Apply the saved theme before first paint (prevents a flash of the dark theme) -->
+    <script>
+        try {
+            if (JSON.parse(localStorage.getItem("oslab_theme")) === "light") {
+                document.documentElement.classList.add("light-theme");
+            }
+        } catch (err) {}
+    </script>
+
     <link rel="stylesheet" href="css/history.css">
+    <link rel="stylesheet" href="css/navbar.css">
 </head>
 
 <body>
@@ -31,7 +41,7 @@
         <a href="history.html" class="active">Simulation History</a>
     </nav>
 
-    <div class="theme-toggle" title="Toggle Theme">☾</div>
+    <button type="button" class="theme-toggle" title="Toggle Theme" aria-label="Switch to Light Mode">☾</button>
 </header>
 
 <!-- =====================================================
@@ -53,35 +63,35 @@
     <!-- STATS OVERVIEW -->
     <section class="history-stats">
         <div class="stat-card">
-            <div class="stat-icon">📊</div>
+            <div class="stat-icon stat-icon--blue">📊</div>
             <div class="stat-info">
                 <h4 id="statTotal">0</h4>
                 <p>Total Records</p>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="color: #c084fc;">▤</div>
+            <div class="stat-icon stat-icon--purple">▤</div>
             <div class="stat-info">
                 <h4 id="statPage">0</h4>
                 <p>Page Replacement</p>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="color: #facc15;">▥</div>
+            <div class="stat-icon stat-icon--amber">▥</div>
             <div class="stat-info">
                 <h4 id="statCpu">0</h4>
                 <p>CPU Scheduling</p>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="color: #4ade80;">◈</div>
+            <div class="stat-icon stat-icon--green">◈</div>
             <div class="stat-info">
                 <h4 id="statDisk">0</h4>
                 <p>Disk Scheduling</p>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="color: #fb7185;">▦</div>
+            <div class="stat-icon stat-icon--red">▦</div>
             <div class="stat-info">
                 <h4 id="statMemory">0</h4>
                 <p>Memory Allocation</p>

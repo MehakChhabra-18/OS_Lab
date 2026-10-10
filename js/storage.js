@@ -124,18 +124,34 @@
         },
 
         applyTheme(theme) {
-            if (theme === "light") {
+            const isLight = theme === "light";
+
+            if (isLight) {
                 document.documentElement.classList.add("light-theme");
                 document.body && document.body.classList.add("light-theme");
             } else {
                 document.documentElement.classList.remove("light-theme");
                 document.body && document.body.classList.remove("light-theme");
             }
+
+            // Keep the toggle control's glyph, tooltip and accessible name in sync
+            const nextModeLabel = isLight ? "Switch to Dark Mode" : "Switch to Light Mode";
             const toggles = document.querySelectorAll(".theme-toggle");
             toggles.forEach(t => {
-                t.textContent = theme === "light" ? "☀️" : "☾";
-                t.setAttribute("title", theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode");
+                t.textContent = isLight ? "☀️" : "☾";
+                t.setAttribute("title", nextModeLabel);
+                t.setAttribute("aria-label", nextModeLabel);
             });
+
+            // Let canvas/Gantt renderers repaint with the matching palette
+            // (they cannot react to a CSS class change on their own)
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("oslab:themechange", {
+                        detail: { theme: isLight ? "light" : "dark" }
+                    })
+                );
+            } catch (_) { /* older browsers: visuals keep the last palette */ }
         },
 
         toggleTheme() {

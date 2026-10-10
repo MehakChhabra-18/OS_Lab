@@ -26,204 +26,9 @@ body {
 
 
 /* =========================================================
-   NAVBAR
-   MATCHES DISK SCHEDULING PAGE
+   NAVBAR / FOOTER
+   provided by the shared css/navbar.css
    ========================================================= */
-
-.header {
-
-    height: 104px;
-
-    padding: 0 40px;
-
-    background: #0b172d;
-
-    border-bottom: 1px solid #26385d;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 100;
-}
-
-
-/* =========================================================
-   BRAND
-   ========================================================= */
-
-.brand {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 16px;
-
-    flex-shrink: 0;
-}
-
-
-.brand-icon {
-
-    width: 54px;
-
-    height: 54px;
-
-    border: 1px solid #405a88;
-
-    border-radius: 16px;
-
-    background: #101d38;
-
-    color: #ffc83d;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 23px;
-
-    box-shadow: none;
-}
-
-
-.brand-info {
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-}
-
-
-.brand-info h1 {
-
-    font-size: 29px;
-
-    line-height: 1.05;
-
-    font-weight: 700;
-
-    color: #f5f7ff;
-}
-
-
-.brand-info h1 span {
-
-    color: #7797ff;
-}
-
-
-.brand-info p {
-
-    margin-top: 3px;
-
-    font-size: 13px;
-
-    color: #7f9bd0;
-}
-
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-.header nav {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    margin-left: auto;
-
-    margin-right: 45px;
-}
-
-
-.header nav a {
-
-    color: #aebfe2;
-
-    text-decoration: none;
-
-    font-size: 15px;
-
-    font-weight: 500;
-
-    padding: 13px 17px;
-
-    border-radius: 10px;
-
-    border: 1px solid transparent;
-
-    transition: all 0.2s ease;
-}
-
-
-.header nav a:hover {
-
-    color: #ffffff;
-
-    background: #111f3b;
-}
-
-
-/* =========================================================
-   ACTIVE NAVIGATION
-   ========================================================= */
-
-.header nav a.active {
-
-    color: #ffffff;
-
-    background: #172949;
-
-    border: 1px solid #39598c;
-}
-
-
-/* =========================================================
-   THEME TOGGLE
-   ========================================================= */
-
-.theme-toggle {
-
-    width: 40px;
-
-    height: 40px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    color: #9db5e5;
-
-    font-size: 20px;
-
-    cursor: pointer;
-
-    flex-shrink: 0;
-}
-
-
-.theme-toggle:hover {
-
-    color: #ffffff;
-}
 
 
 /* =========================================================
@@ -647,6 +452,14 @@ main {
 }
 
 
+.blue-icon {
+
+    background: #60a5fa18;
+
+    color: #60a5fa;
+}
+
+
 /* =========================================================
    CARD CONTENT
    ========================================================= */
@@ -740,34 +553,6 @@ main {
 .card-link:hover {
 
     color: #ffc83d;
-}
-
-
-/* =========================================================
-   COMING SOON
-   ========================================================= */
-
-.coming-soon {
-
-    opacity: 0.7;
-}
-
-
-.coming-label {
-
-    display: inline-block;
-
-    color: #ffc83d;
-
-    border: 1px solid #ffc83d55;
-
-    border-radius: 5px;
-
-    padding: 5px 9px;
-
-    font-size: 10px;
-
-    font-weight: bold;
 }
 
 
@@ -906,46 +691,8 @@ main {
 
 
 /* =========================================================
-   FOOTER
+   FOOTER: provided by the shared css/navbar.css
    ========================================================= */
-
-footer {
-
-    padding: 30px 7%;
-
-    border-top: 1px solid #202f53;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    background: #080f1d;
-}
-
-
-.footer-brand {
-
-    display: flex;
-
-    flex-direction: column;
-}
-
-
-.footer-brand strong {
-
-    font-size: 18px;
-}
-
-
-.footer-brand span,
-footer p {
-
-    color: #687694;
-
-    font-size: 12px;
-}
 
 
 /* =========================================================
@@ -953,28 +700,6 @@ footer p {
    ========================================================= */
 
 @media (max-width: 1000px) {
-
-    .header {
-
-        padding: 0 25px;
-    }
-
-
-    .header nav {
-
-        margin-right: 20px;
-
-        gap: 3px;
-    }
-
-
-    .header nav a {
-
-        font-size: 14px;
-
-        padding: 11px 12px;
-    }
-
 
     .hero {
 
@@ -1010,72 +735,6 @@ footer p {
 
 @media (max-width: 700px) {
 
-    .header {
-
-        height: auto;
-
-        min-height: 90px;
-
-        padding: 12px 18px;
-
-        flex-wrap: wrap;
-    }
-
-
-    .brand-icon {
-
-        width: 45px;
-
-        height: 45px;
-
-        border-radius: 13px;
-    }
-
-
-    .brand-info h1 {
-
-        font-size: 25px;
-    }
-
-
-    .brand-info p {
-
-        font-size: 11px;
-    }
-
-
-    .theme-toggle {
-
-        margin-left: auto;
-    }
-
-
-    .header nav {
-
-        width: 100%;
-
-        order: 3;
-
-        margin: 0;
-
-        justify-content: center;
-
-        overflow-x: auto;
-
-        padding-bottom: 3px;
-    }
-
-
-    .header nav a {
-
-        font-size: 12px;
-
-        white-space: nowrap;
-
-        padding: 9px 12px;
-    }
-
-
     .hero {
 
         padding: 60px 6%;
@@ -1100,13 +759,13 @@ footer p {
     }
 
 
-    footer {
+    .card-link {
 
-        flex-direction: column;
+        display: inline-flex;
 
-        gap: 15px;
+        align-items: center;
 
-        text-align: center;
+        min-height: 44px;
     }
 
 }
@@ -1117,40 +776,6 @@ footer p {
    ========================================================= */
 
 @media (max-width: 450px) {
-
-    .brand-info p {
-
-        display: none;
-    }
-
-
-    .brand-info h1 {
-
-        font-size: 22px;
-    }
-
-
-    .brand-icon {
-
-        width: 42px;
-
-        height: 42px;
-    }
-
-
-    .header nav {
-
-        justify-content: flex-start;
-    }
-
-
-    .header nav a {
-
-        font-size: 11px;
-
-        padding: 8px 10px;
-    }
-
 
     .visualizer-card {
         flex-direction: column;
@@ -1163,32 +788,7 @@ body.light-theme {
     background: #f1f5f9;
     color: #0f172a;
 }
-body.light-theme .header {
-    background: #ffffff;
-    border-bottom: 1px solid #cbd5e1;
-}
-body.light-theme .header nav a {
-    color: #475569;
-}
-body.light-theme .header nav a:hover {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-body.light-theme .header nav a.active {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-    color: #1e3a8a;
-}
-body.light-theme .brand-icon {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-}
-body.light-theme .brand-info h1 {
-    color: #0f172a;
-}
-body.light-theme .brand-info p {
-    color: #64748b;
-}
+/* HEADER / NAVBAR light-theme: shared css/navbar.css */
 body.light-theme .visualizer-card,
 body.light-theme .feature,
 body.light-theme .terminal {
@@ -1227,8 +827,75 @@ body.light-theme .terminal-header {
     background: #e2e8f0;
     border-bottom: 1px solid #cbd5e1;
 }
-body.light-theme footer {
-    background: #ffffff;
-    border-top: 1px solid #cbd5e1;
+body.light-theme .badge {
+    color: #4338ca;
+}
+body.light-theme .hero h2 span {
+    color: #b45309;
+}
+body.light-theme .section-heading > span,
+body.light-theme .guide-content > span {
+    color: #92400e;
+}
+body.light-theme .features {
+    background: #e2e8f0;
+}
+body.light-theme .guide-content {
+    background:
+
+        radial-gradient(
+            circle,
+            #5146f522,
+            transparent 60%
+        ),
+
+        #ffffff;
+
+    border-color: #cbd5e1;
+}
+body.light-theme .guide p {
+    color: #475569;
+}
+body.light-theme .card-label {
     color: #64748b;
+}
+body.light-theme .card-link {
+    color: #4f46e5;
+}
+body.light-theme .card-link:hover {
+    color: #92400e;
+}
+body.light-theme .secondary-btn:hover {
+    border-color: #92400e;
+    color: #92400e;
+}
+body.light-theme .purple-icon {
+    color: #4338ca;
+}
+body.light-theme .yellow-icon {
+    color: #b45309;
+}
+body.light-theme .green-icon {
+    color: #047857;
+}
+body.light-theme .pink-icon {
+    color: #be185d;
+}
+body.light-theme .blue-icon {
+    color: #1d4ed8;
+}
+body.light-theme .feature-icon {
+    color: #4338ca;
+}
+body.light-theme .terminal-body {
+    color: #334155;
+}
+body.light-theme .terminal-body .purple {
+    color: #4f46e5;
+}
+body.light-theme .terminal-body .success {
+    color: #0f766e;
+}
+body.light-theme .terminal-body .yellow {
+    color: #92400e;
 }

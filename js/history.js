@@ -52,13 +52,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            historyContainer.innerHTML = "<p style='color: #8da2c9; text-align: center; padding: 20px;'>Loading simulation records...</p>";
+            // Colors come from css/history.css (.history-status*) so they follow the theme
+            historyContainer.innerHTML = "<p class='history-status' style='text-align: center; padding: 20px;'>Loading simulation records...</p>";
             allRecords = await window.OSLabStorage.DB.getAll();
             updateStats(allRecords);
             renderRecords();
         } catch (err) {
             console.error("Failed to load records:", err);
-            historyContainer.innerHTML = `<p style='color: #f87171; text-align: center; padding: 20px;'>Failed to load simulations from IndexedDB: ${err.message}</p>`;
+            historyContainer.innerHTML = `<p class='history-status history-status-error' style='text-align: center; padding: 20px;'>Failed to load simulations from IndexedDB: ${err.message}</p>`;
         }
     }
 

@@ -39,9 +39,26 @@
 function roundrobin(processes, quantum) {
 
     const q =
-        Number(quantum) > 0
-            ? Number(quantum)
-            : 2;
+        Number(quantum);
+
+
+    /*
+     * Reject invalid quanta instead of silently
+     * substituting a default. cpu-scheduling.js
+     * validates before calling and surfaces this
+     * message via alert().
+     */
+
+    if (
+        !Number.isInteger(q) ||
+        q <= 0
+    ) {
+
+        throw new Error(
+            "Time Quantum must be a positive integer."
+        );
+
+    }
 
 
     /* --------------------------------------------------------

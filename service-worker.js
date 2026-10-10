@@ -3,7 +3,7 @@
  * Provides offline navigation, static asset caching, and cache versioning.
  */
 
-const CACHE_NAME = "oslab-static-v1";
+const CACHE_NAME = "oslab-static-v2";
 
 // Essential static resources to cache
 const STATIC_ASSETS = [
@@ -20,6 +20,7 @@ const STATIC_ASSETS = [
     "./css/disk-scheduling.css",
     "./css/memory-allocation.css",
     "./css/history.css",
+    "./css/navbar.css",
     "./data/modules.json",
     "./js/storage.js",
     "./js/app-common.js",

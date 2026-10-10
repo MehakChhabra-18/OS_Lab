@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OS Lab | Disk Scheduling</title>
+
+    <!-- Apply the saved theme before first paint (prevents a flash of the dark theme) -->
+    <script>
+        try {
+            if (JSON.parse(localStorage.getItem("oslab_theme")) === "light") {
+                document.documentElement.classList.add("light-theme");
+            }
+        } catch (err) {}
+    </script>
+
+    <link rel="stylesheet" href="css/disk-scheduling.css">
+    <link rel="stylesheet" href="css/navbar.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER / NAVBAR
+===================================================== -->
+<header>
+    <div class="brand">
+        <div class="brand-icon">⚙</div>
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="page-replacement.html">Page Replacement</a>
+        <a href="cpu-scheduling.html">CPU Scheduling</a>
+        <a href="disk-scheduling.html" class="active">Disk Scheduling</a>
+        <a href="memory-allocation.html">Memory Allocation</a>
+        <a href="history.html">Simulation History</a>
+    </nav>
+
+    <button type="button" class="theme-toggle" title="Toggle Theme" aria-label="Switch to Light Mode">☾</button>
+</header>
+
+
+<main>
+
+    <!-- ================= CONTROLS ================= -->
+
+    <section class="card controls-card">
+
+        <div class="card-title">
+            <span>⚙</span>
+            <h2>Simulation Controls</h2>
+        </div>
+
+        <div class="controls-grid">
+
+            <div class="control-group">
+
+                <label for="algorithm">
+                    Disk Scheduling Algorithm
+                </label>
+
+                <select id="algorithm">
+
+                    <option value="fcfs">
+                        FCFS (First Come First Serve)
+                    </option>
+
+                    <option value="sstf">
+                        SSTF (Shortest Seek Time First)
+                    </option>
+
+                    <option value="scan">
+                        SCAN
+                    </option>
+
+                    <option value="cscan">
+                        C-SCAN
+                    </option>
+
+                    <option value="look">
+                        LOOK
+                    </option>
+
+                    <option value="clook">
+                        C-LOOK
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control-group">
+
+                <label for="initialHead">
+                    Initial Head Position
+                </label>
+
+                <input
+                    type="number"
+                    id="initialHead"
+                    min="0"
+                    max="199"
+                    value="53"
+                >
+
+            </div>
+
+
+            <div class="control-group full-width">
+
+                <label for="requestQueue">
+                    Disk Request Queue
+                </label>
+
+                <input
+                    type="text"
+                    id="requestQueue"
+                    value="98, 183, 37, 122, 14, 124, 65, 67"
+                    placeholder="Example: 98, 183, 37, 122, 14"
+                >
+
+                <small>
+                    Enter requests separated by commas
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                id="simulateBtn"
+                class="simulate-btn"
+                type="button"
+            >
+                ▶ &nbsp; Simulate
+            </button>
+
+            <button
+                id="resetBtn"
+                class="reset-btn"
+                type="button"
+            >
+                ⟳ &nbsp; Reset
+            </button>
+
+            <button
+                id="saveSimBtn"
+                class="save-sim-btn"
+                type="button"
+                style="display:none;"
+                title="Save simulation results to IndexedDB"
+            >
+                💾 &nbsp; Save Simulation
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- ================= VISUALIZATION ================= -->
+
+    <section class="card visualization-card">
+
+        <div class="card-title visualization-header">
+
+            <div class="title-left">
+                <span>▥</span>
+
+                <h2>
+                    Disk Head Movement
+                </h2>
+            </div>
+
+            <span
+                id="stepCounter"
+                class="step-counter"
+            >
+                Step 0 of 0
+            </span>
+
+        </div>
+
+
+        <div class="canvas-wrapper">
+
+            <canvas id="diskCanvas"></canvas>
+
+        </div>
+
+
+        <div class="legend">
+
+            <div class="legend-item">
+                <span class="legend-dot head-dot"></span>
+                Initial HEAD
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot request-dot"></span>
+                Request
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-line"></span>
+                Head Movement
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STEP INFO ================= -->
+
+    <section class="card step-card">
+
+        <div class="step-header">
+
+            <div class="card-title">
+                <span>▷</span>
+
+                <h2>
+                    Step-by-Step Execution
+                </h2>
+            </div>
+
+            <span id="movementText">
+                Run simulation to begin
+            </span>
+
+        </div>
+
+
+        <div class="step-info-grid">
+
+            <div class="info-box">
+                <span>Current HEAD</span>
+                <strong id="currentHead">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Next Request</span>
+                <strong id="nextRequest">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Seek Distance</span>
+                <strong id="seekDistance">-</strong>
+            </div>
+
+
+            <div class="info-box">
+                <span>Total Seek</span>
+                <strong id="totalSeek">-</strong>
+            </div>
+
+        </div>
+
+
+        <div class="explanation">
+
+            <h3>💡 Explanation</h3>
+
+            <p id="explanationText">
+                Enter the disk requests and click
+                <b>Simulate</b> to start the visualization.
+            </p>
+
+        </div>
+
+
+        <div class="navigation action-bar">
+
+            <button
+                id="previousBtn"
+                type="button"
+                disabled
+            >
+                ← Previous
+            </button>
+
+            <button
+                id="nextBtn"
+                type="button"
+                disabled
+            >
+                Next →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= REQUEST ORDER ================= -->
+
+    <section class="card order-card">
+
+        <div class="card-title">
+
+            <span>▤</span>
+
+            <h2>
+                Request Execution Order
+            </h2>
+
+        </div>
+
+
+        <div
+            id="requestOrder"
+            class="request-order"
+        >
+
+            <span class="empty-order">
+                No simulation yet
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RESULTS ================= -->
+
+    <section class="card results-card">
+
+        <div class="card-title">
+
+            <span>▥</span>
+
+            <h2>
+                Results
+            </h2>
+
+        </div>
+
+
+        <div class="metrics-grid">
+
+            <div class="metric">
+
+                <span>↔</span>
+
+                <p>
+                    Total Seek Distance
+                </p>
+
+                <strong id="resultSeek">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <span>↗</span>
+
+                <p>
+                    Requests Served
+                </p>
+
+                <strong id="resultRequests">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <span>⌛</span>
+
+                <p>
+                    Average Seek
+                </p>
+
+                <strong id="resultAverage">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+<footer>
+    <p>© 2026 OS Lab | Built with HTML5, CSS3, and Vanilla JavaScript</p>
+</footer>
+
+
+<!-- IMPORTANT:
+     Scripts are loaded AFTER the HTML.
+-->
+
+<script src="js/disk/fcfs.js"></script>
+<script src="js/disk/sstf.js"></script>
+<script src="js/disk/scan.js"></script>
+<script src="js/disk/cscan.js"></script>
+<script src="js/disk/look.js"></script>
+<script src="js/disk/clook.js"></script>
+
+<!-- STORAGE & COMMON -->
+<script src="js/storage.js"></script>
+<script src="js/app-common.js"></script>
+
+<script src="js/disk-scheduling.js"></script>
+
+<script>
+window.addEventListener("load", function () {
+    setTimeout(function () {
+        var s = document.getElementById("simulateBtn");
+        if (s) s.click();
+    }, 300);
+});
+</script>
+</body>
+</html>

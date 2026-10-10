@@ -8,105 +8,23 @@
     box-sizing: border-box;
 }
 
+/* Sticky-footer layout (body flex column + main { flex:1 }) is defined once
+   in the shared css/navbar.css — do not redeclare it here. */
 body {
     font-family: Arial, sans-serif;
     background: #071225;
     color: #e8edff;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 /* =========================================================
-   NAVBAR (MATCHES OTHER PAGES)
+   NAVBAR + FOOTER: provided by the shared css/navbar.css
    ========================================================= */
-header {
-    height: 104px;
-    padding: 0 40px;
-    background: #0b172d;
-    border-bottom: 1px solid #26385d;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.brand-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    background: #11213f;
-    border: 1px solid #26385d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #4f8cff;
-}
-
-.brand h1 {
-    font-size: 26px;
-    font-weight: 700;
-}
-
-.brand h1 span {
-    color: #4f8cff;
-}
-
-.brand p {
-    font-size: 13px;
-    color: #8da2c9;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-nav a {
-    text-decoration: none;
-    color: #8da2c9;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 14px;
-    border-radius: 8px;
-    transition: 0.2s ease;
-}
-
-nav a:hover {
-    color: #ffffff;
-    background: #11213f;
-}
-
-nav a.active {
-    color: #ffffff;
-    background: #172b50;
-    border: 1px solid #36598d;
-}
-
-.theme-toggle {
-    color: #8ba9e8;
-    font-size: 21px;
-    width: 40px;
-    text-align: center;
-    cursor: pointer;
-}
 
 /* =========================================================
    MAIN HISTORY DASHBOARD
    ========================================================= */
 main {
-    flex: 1;
     padding: 32px 40px 60px;
     max-width: 1400px;
     margin: 0 auto;
@@ -186,6 +104,14 @@ main {
     color: #ffffff;
 }
 
+/* KEYBOARD FOCUS: rings must stay visible on both themes */
+.btn:focus-visible,
+.filter-tab:focus-visible,
+.modal-close:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
 /* STATS ROW */
 .history-stats {
     display: grid;
@@ -214,6 +140,38 @@ main {
     font-size: 20px;
     background: #172b50;
     color: #60a5fa;
+}
+
+/* Per-module glyph tints — the modifier classes are set in history.html so
+   no inline colours are needed; light counterparts are in the LIGHT THEME
+   section below. */
+.stat-icon--blue {
+    color: #60a5fa;
+}
+
+.stat-icon--purple {
+    color: #c084fc;
+}
+
+.stat-icon--amber {
+    color: #facc15;
+}
+
+.stat-icon--green {
+    color: #4ade80;
+}
+
+.stat-icon--red {
+    color: #fb7185;
+}
+
+/* Status lines injected by js/history.js (classes only, colours in CSS) */
+#historyContainer > .history-status {
+    color: #8da2c9;
+}
+
+#historyContainer > .history-status-error {
+    color: #f87171;
 }
 
 .stat-info h4 {
@@ -280,6 +238,11 @@ main {
     border-radius: 8px;
     padding: 4px 12px;
     min-width: 260px;
+    transition: border-color 0.2s ease;
+}
+
+.search-box:focus-within {
+    border-color: #3b82f6;
 }
 
 .search-box input {
@@ -290,6 +253,13 @@ main {
     font-size: 13px;
     outline: none;
     width: 100%;
+}
+
+/* Explicit keyboard ring for the field; mouse clicks keep the wrapper cue above */
+.search-box input:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 3px;
+    border-radius: 4px;
 }
 
 .search-box input::placeholder {
@@ -392,7 +362,7 @@ main {
 
 .card-body-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
     gap: 16px;
     background: #071225;
     border: 1px solid #172b50;
@@ -437,6 +407,39 @@ main {
 .btn-sm {
     padding: 6px 12px;
     font-size: 12px;
+}
+
+/* TOUCH TARGETS: raise interactive elements to ~44px on coarse pointers
+   so the dense desktop layout stays untouched. */
+@media (pointer: coarse) {
+    .btn {
+        min-height: 44px;
+    }
+
+    .btn-sm {
+        padding: 10px 16px;
+    }
+
+    .filter-tab {
+        min-height: 44px;
+        padding: 10px 16px;
+    }
+
+    .search-box {
+        padding: 6px 12px;
+    }
+
+    .search-box input {
+        padding: 10px 8px;
+    }
+
+    .modal-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+    }
 }
 
 /* EMPTY STATE */
@@ -559,6 +562,13 @@ main {
     border-color: #3b82f6;
 }
 
+.form-group input:focus-visible,
+.form-group textarea:focus-visible,
+.form-group select:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 1px;
+}
+
 .modal-footer {
     padding: 16px 24px;
     border-top: 1px solid #1e335a;
@@ -582,18 +592,7 @@ pre.details-code {
     word-break: break-all;
 }
 
-/* FOOTER */
-footer {
-    height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top: 1px solid #1e335a;
-    background: #07101f;
-    color: #8da2c9;
-    font-size: 13px;
-    text-align: center;
-}
+/* FOOTER: provided by the shared css/navbar.css */
 
 /* LIGHT THEME SUPPORT */
 html.light-theme, body.light-theme {
@@ -601,7 +600,6 @@ html.light-theme, body.light-theme {
     color: #0f172a;
 }
 
-body.light-theme header,
 body.light-theme .history-card,
 body.light-theme .stat-card,
 body.light-theme .history-controls,
@@ -611,12 +609,12 @@ body.light-theme .modal {
     color: #0f172a;
 }
 
-body.light-theme .brand-icon,
 body.light-theme .stat-icon,
 body.light-theme .card-body-grid,
 body.light-theme .search-box,
 body.light-theme .form-group input,
-body.light-theme .form-group textarea {
+body.light-theme .form-group textarea,
+body.light-theme .form-group select {
     background: #f8fafc;
     border-color: #e2e8f0;
     color: #0f172a;
@@ -627,29 +625,236 @@ body.light-theme .card-notes {
     color: #334155;
 }
 
-body.light-theme footer {
+/* SECONDARY TEXT: #8da2c9 / #94a3b8 only pass on dark surfaces,
+   so every component whose background flips above needs a darker tint. */
+body.light-theme .history-title p,
+body.light-theme .stat-info p,
+body.light-theme .card-date,
+body.light-theme .body-item strong,
+body.light-theme .form-group label,
+body.light-theme .empty-state p {
+    color: #475569;
+}
+
+/* PRIMARY TEXT: these were pinned to #ffffff / #e2e8f0 for the dark cards. */
+body.light-theme .stat-info h4,
+body.light-theme .card-title-row h3,
+body.light-theme .body-item p,
+body.light-theme .empty-state h3 {
+    color: #0f172a;
+}
+
+body.light-theme .empty-state {
+    background: #ffffff;
+    border-color: #94a3b8;
+}
+
+body.light-theme .filter-tab {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+body.light-theme .filter-tab:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-theme .filter-tab.active {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+body.light-theme .algo-tag {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+/* Badge tints stay translucent, so only the foreground/border need darkening. */
+body.light-theme .badge-page {
+    color: #6d28d9;
+    border-color: #c4b5fd;
+}
+
+body.light-theme .badge-cpu {
+    color: #854d0e;
+    border-color: #fde68a;
+}
+
+body.light-theme .badge-disk {
+    color: #166534;
+    border-color: #86efac;
+}
+
+body.light-theme .badge-memory {
+    color: #be123c;
+    border-color: #fda4af;
+}
+
+body.light-theme .search-box input {
+    color: #0f172a;
+}
+
+body.light-theme .search-box input::placeholder {
+    color: #64748b;
+}
+
+body.light-theme .search-box:focus-within {
+    border-color: #1d4ed8;
+}
+
+body.light-theme .btn-outline {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #1d4ed8;
+}
+
+body.light-theme .btn-outline:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+
+body.light-theme .modal-header,
+body.light-theme .modal-footer {
+    border-color: #e2e8f0;
+}
+
+body.light-theme .modal-close {
+    color: #475569;
+}
+
+body.light-theme pre.details-code {
     background: #f8fafc;
     border-color: #e2e8f0;
-    color: #64748b;
+    color: #1e293b;
+}
+
+/* Stat glyphs: light counterparts of the .stat-icon--* tints defined above.
+   Classes come from history.html, so no !important / nth-child is needed. */
+body.light-theme .stat-icon {
+    color: #1d4ed8;
+}
+
+body.light-theme .stat-icon--purple {
+    color: #6d28d9;
+}
+
+body.light-theme .stat-icon--amber {
+    color: #854d0e;
+}
+
+body.light-theme .stat-icon--green {
+    color: #166534;
+}
+
+body.light-theme .stat-icon--red {
+    color: #be123c;
+}
+
+/* Status lines injected by js/history.js (.history-status*) */
+body.light-theme #historyContainer > .history-status {
+    color: #475569;
+}
+
+body.light-theme #historyContainer > .history-status-error {
+    color: #b91c1c;
+}
+
+/* Focus rings have to clear the light surfaces too. */
+body.light-theme .btn:focus-visible,
+body.light-theme .filter-tab:focus-visible,
+body.light-theme .modal-close:focus-visible,
+body.light-theme .search-box input:focus-visible,
+body.light-theme .form-group input:focus-visible,
+body.light-theme .form-group textarea:focus-visible,
+body.light-theme .form-group select:focus-visible {
+    outline-color: #1d4ed8;
 }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    header {
-        height: auto;
-        padding: 16px 20px;
-        flex-direction: column;
-        gap: 14px;
-    }
-    nav {
-        justify-content: center;
-        gap: 4px;
-    }
-    nav a {
-        font-size: 12px;
-        padding: 8px 10px;
-    }
     main {
         padding: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 16px 14px 48px;
+    }
+
+    .history-title h2 {
+        font-size: 23px;
+    }
+
+    .history-stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .stat-info h4 {
+        font-size: 19px;
+    }
+
+    /* Keeps "REPLACEMENT" / "ALLOCATION" inside a two-up stat card at 375px */
+    .stat-info p {
+        font-size: 11px;
+    }
+
+    .history-controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+    }
+
+    .filter-tabs {
+        width: 100%;
+    }
+
+    /* Stacked full-width: min-width 260px would overflow a 320px viewport
+       once the controls' own padding is accounted for. */
+    .search-box {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .history-card {
+        padding: 16px;
+    }
+
+    .card-body-grid {
+        padding: 12px 14px;
+    }
+
+    .empty-state {
+        padding: 44px 16px;
+    }
+
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal {
+        max-width: 100%;
+    }
+
+    .modal-header {
+        padding: 14px 16px;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .modal-footer {
+        padding: 12px 16px;
     }
 }

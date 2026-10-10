@@ -47,17 +47,55 @@ const GanttVisualizer = (function () {
         return "#ffffff";
     }
 
+    /**
+     * Theme-aware chrome colors (baseline, timeline, borders, labels).
+     * Resolved at draw time so a theme switch repaints immediately.
+     */
+    function getPalette() {
+        const isLight =
+            document.documentElement.classList.contains("light-theme");
+
+        if (isLight) {
+            return {
+                baseline: "#cbd5e1",
+                placeholder: "#64748b",
+                timeline: "#cbd5e1",
+                blockBorder: "#0f172a",
+                tick: "#94a3b8",
+                timeLabel: "#475569"
+            };
+        }
+
+        return {
+            baseline: "#29385e",
+            placeholder: "#64748b",
+            timeline: "#2e3f6b",
+            blockBorder: "#0b1428",
+            tick: "#5b70a8",
+            timeLabel: "#c5d0f5"
+        };
+    }
+
     let animationFrameId = null;
+
+    // Last render state, replayed when the theme changes
+    let lastRender = null;
+    let wasCleared = false;
 
     /**
      * Clears the Gantt chart canvas and resets state.
      */
     function clearGantt() {
+        lastRender = null;
+        wasCleared = true;
+
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
         }
         if (!canvas || !ctx) return;
+
+        const palette = getPalette();
 
         const dpr = window.devicePixelRatio || 1;
         const width = container ? Math.max(container.clientWidth - 40, 500) : 500;
@@ -74,7 +112,7 @@ const GanttVisualizer = (function () {
         ctx.clearRect(0, 0, width, height);
 
         // Draw empty baseline
-        ctx.strokeStyle = "#29385e";
+        ctx.strokeStyle = palette.baseline;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(30, 95);
@@ -82,7 +120,7 @@ const GanttVisualizer = (function () {
         ctx.stroke();
 
         // Draw empty placeholder text
-        ctx.fillStyle = "#64748b";
+        ctx.fillStyle = palette.placeholder;
         ctx.font = "14px Arial, sans-serif";
         ctx.textAlign = "center";
         ctx.fillText("Click Next to view Gantt chart step-by-step", width / 2, 55);
@@ -95,6 +133,9 @@ const GanttVisualizer = (function () {
      * @param {boolean} animateLast - Whether to perform a subtle entrance animation on the last segment
      */
     function renderGantt(ganttSegments, currentStep, animateLast = false) {
+        lastRender = { segments: ganttSegments, step: currentStep };
+        wasCleared = false;
+
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
@@ -105,6 +146,8 @@ const GanttVisualizer = (function () {
             clearGantt();
             return;
         }
+
+        const palette = getPalette();
 
         const segmentsToDraw = ganttSegments.slice(0, currentStep);
         const totalSimTime = ganttSegments[ganttSegments.length - 1].endTime;
@@ -136,7 +179,7 @@ const GanttVisualizer = (function () {
             ctx.clearRect(0, 0, chartWidth, height);
 
             // Draw horizontal timeline baseline
-            ctx.strokeStyle = "#2e3f6b";
+            ctx.strokeStyle = palette.timeline;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(paddingLeft, timelineY);
@@ -186,7 +229,7 @@ const GanttVisualizer = (function () {
                 ctx.fill();
 
                 // Border between blocks
-                ctx.strokeStyle = "#0b1428";
+                ctx.strokeStyle = palette.blockBorder;
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 ctx.restore();
@@ -222,7 +265,7 @@ const GanttVisualizer = (function () {
         function drawTimeTick(x, y, timeValue) {
             ctx.save();
             // Vertical tick mark
-            ctx.strokeStyle = "#5b70a8";
+            ctx.strokeStyle = palette.tick;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(x, y - 6);
@@ -230,7 +273,7 @@ const GanttVisualizer = (function () {
             ctx.stroke();
 
             // Time number label below tick
-            ctx.fillStyle = "#c5d0f5";
+            ctx.fillStyle = palette.timeLabel;
             ctx.font = "bold 13px Arial, sans-serif";
             ctx.textAlign = "center";
             ctx.fillText(String(timeValue), x, y + 22);
@@ -275,6 +318,20 @@ const GanttVisualizer = (function () {
             }
         }
     }
+
+    // Repaint with the matching palette when the theme toggles
+    window.addEventListener("oslab:themechange", () => {
+        try {
+            if (wasCleared) {
+                clearGantt();
+            } else if (lastRender) {
+                renderGantt(lastRender.segments, lastRender.step, false);
+            }
+            // Nothing rendered yet: leave the blank canvas alone
+        } catch (_) {
+            /* never let a theme switch break the page */
+        }
+    });
 
     return {
         renderGantt,

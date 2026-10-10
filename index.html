@@ -7,37 +7,32 @@
 
     <title>OS Lab | Operating System Visualizer</title>
 
+    <!-- Apply the saved theme before first paint (prevents a flash of the dark theme) -->
+    <script>
+        try {
+            if (JSON.parse(localStorage.getItem("oslab_theme")) === "light") {
+                document.documentElement.classList.add("light-theme");
+            }
+        } catch (err) {}
+    </script>
+
     <link rel="stylesheet" href="css/landing.css">
+    <link rel="stylesheet" href="css/navbar.css">
 </head>
 
 <body>
 
 <!-- =====================================================
      HEADER / NAVBAR
-     ===================================================== -->
-
-<header class="header">
-
+===================================================== -->
+<header>
     <div class="brand">
-
-        <div class="brand-icon">
-            ⚙
+        <div class="brand-icon">⚙</div>
+        <div>
+            <h1>OS <span>Lab</span></h1>
+            <p>Visualize | Learn | Experiment</p>
         </div>
-
-        <div class="brand-info">
-
-            <h1>
-                OS <span>Lab</span>
-            </h1>
-
-            <p>
-                Visualize | Learn | Experiment
-            </p>
-
-        </div>
-
     </div>
-
 
     <nav>
         <a href="index.html" class="active">Home</a>
@@ -48,11 +43,7 @@
         <a href="history.html">Simulation History</a>
     </nav>
 
-
-    <div class="theme-toggle">
-        ☾
-    </div>
-
+    <button type="button" class="theme-toggle" title="Toggle Theme" aria-label="Switch to Light Mode">☾</button>
 </header>
 
 
@@ -335,7 +326,7 @@
 
             <!-- SIMULATION HISTORY -->
             <div class="visualizer-card">
-                <div class="card-icon blue-icon" style="color: #60a5fa;">
+                <div class="card-icon blue-icon">
                     📋
                 </div>
                 <div class="card-content">
@@ -505,27 +496,9 @@
 
 <!-- =====================================================
      FOOTER
-     ===================================================== -->
-
+===================================================== -->
 <footer>
-
-    <div class="footer-brand">
-
-        <strong>
-            OS Lab
-        </strong>
-
-        <span>
-            Operating System Visualizer
-        </span>
-
-    </div>
-
-
-    <p>
-        © 2026 OS Lab · Built for learning Operating Systems
-    </p>
-
+    <p>© 2026 OS Lab | Built with HTML5, CSS3, and Vanilla JavaScript</p>
 </footer>
 
 <!-- STORAGE & COMMON SCRIPTS -->

@@ -47,15 +47,13 @@
             window.OSLabStorage.Local.applyTheme(savedTheme);
         }
 
-        const toggles = document.querySelectorAll(".theme-toggle");
-        toggles.forEach((btn) => {
-            btn.style.cursor = "pointer";
-            btn.onclick = () => {
-                if (window.OSLabStorage) {
-                    const newTheme = window.OSLabStorage.Local.toggleTheme();
-                    window.OSLabStorage.showToast(`Theme switched to ${newTheme} mode`, "info");
-                }
-            };
+        // The toggle is a real <button>, so Enter/Space activation works natively
+        document.querySelectorAll(".theme-toggle").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                if (!window.OSLabStorage) return;
+                const newTheme = window.OSLabStorage.Local.toggleTheme();
+                window.OSLabStorage.showToast(`Theme switched to ${newTheme} mode`, "info");
+            });
         });
     }
 
@@ -72,54 +70,23 @@
         if (!dismissed) {
             const banner = document.createElement("div");
             banner.id = "oslab-cookie-banner";
-            banner.style.cssText = `
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: #0d1b33;
-                border-top: 1px solid #233b66;
-                padding: 12px 24px;
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                z-index: 9999;
-                font-size: 13px;
-                color: #c5d6f8;
-                box-shadow: 0 -4px 16px rgba(0,0,0,0.4);
-            `;
+            banner.className = "cookie-banner";
+            banner.setAttribute("role", "region");
+            banner.setAttribute("aria-label", "Cookie notice");
 
             const visitText = visitInfo.isFirstVisit
                 ? "Welcome to OS Lab! We use cookies to remember your visits and local preferences."
                 : `Welcome back! (Visit #${visitInfo.visitCount}). We store small non-sensitive preferences in cookies and localStorage.`;
 
+            // Styles live in css/navbar.css so the banner follows the light theme
             banner.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 16px;">🍪</span>
+                <div class="cookie-banner-text">
+                    <span class="cookie-banner-icon" aria-hidden="true">🍪</span>
                     <span>${visitText}</span>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button id="oslab-cookie-accept" style="
-                        background: #3b82f6;
-                        color: #ffffff;
-                        border: none;
-                        padding: 6px 14px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                        font-size: 12px;
-                    ">Acknowledge</button>
-                    <button id="oslab-cookie-clear" style="
-                        background: transparent;
-                        color: #94a3b8;
-                        border: 1px solid #334155;
-                        padding: 5px 12px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 12px;
-                    ">Reset Cookies</button>
+                <div class="cookie-banner-actions">
+                    <button type="button" id="oslab-cookie-accept" class="cookie-btn cookie-btn-primary">Acknowledge</button>
+                    <button type="button" id="oslab-cookie-clear" class="cookie-btn cookie-btn-ghost">Reset Cookies</button>
                 </div>
             `;
 

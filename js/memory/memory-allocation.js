@@ -89,6 +89,33 @@ let finalMemory = [];
 
 let finalAllocations = [];
 
+// Algorithm the running simulation was created with.
+// Captured at Simulate time so explanations stay correct
+// even if the select is changed mid-simulation.
+let currentAlgorithm = "first-fit";
+
+
+// ==========================================
+// ALGORITHM DISPLAY NAME
+// ==========================================
+
+function getAlgorithmName(value) {
+
+    if (value === "first-fit") {
+        return "First Fit";
+    }
+
+    if (value === "best-fit") {
+        return "Best Fit";
+    }
+
+    if (value === "worst-fit") {
+        return "Worst Fit";
+    }
+
+    return "Unknown Algorithm";
+}
+
 
 // ==========================================
 // SIMULATE
@@ -102,9 +129,19 @@ simulateButton.addEventListener("click", function () {
         memoryBlocksInput.value
     );
 
+    if (blocks === null) {
+
+        return;
+    }
+
     const processList = parseInput(
         processesInput.value
     );
+
+    if (processList === null) {
+
+        return;
+    }
 
     if (blocks.length === 0) {
 
@@ -173,6 +210,11 @@ else {
 }
 
 
+// Remember which algorithm this simulation
+// belongs to (used by the explanations below).
+currentAlgorithm = algorithm;
+
+
     simulationSteps =
         result.steps;
 
@@ -209,7 +251,7 @@ else {
         "-";
 
     explanationText.innerHTML =
-        "Click <b>Next</b> to begin the First Fit allocation.";
+        `Click <b>Next</b> to begin the ${getAlgorithmName(currentAlgorithm)} allocation.`;
 
 
     previousButton.disabled = true;
@@ -323,6 +365,9 @@ resetButton.addEventListener("click", function () {
     algorithmSelect.value =
         "first-fit";
 
+    currentAlgorithm =
+        "first-fit";
+
 
     memoryBlocksDisplay.innerHTML = `
         <div class="empty-state">
@@ -397,13 +442,41 @@ resetButton.addEventListener("click", function () {
 
 function parseInput(value) {
 
-    return value
-        .split(",")
-        .map(item => Number(item.trim()))
-        .filter(number =>
-            Number.isFinite(number) &&
-            number > 0
-        );
+    const tokens =
+        value
+            .split(",")
+            .map(item => item.trim())
+            .filter(item => item !== "");
+
+
+    const numbers = [];
+
+
+    for (const token of tokens) {
+
+        const number =
+            Number(token);
+
+
+        if (
+            !Number.isFinite(number) ||
+            number <= 0
+        ) {
+
+            alert(
+                `"${token}" is not a valid entry. `
+                + `Please enter positive numbers separated by commas.`
+            );
+
+            return null;
+        }
+
+
+        numbers.push(number);
+    }
+
+
+    return numbers;
 
 }
 
@@ -534,12 +607,44 @@ function renderStep(stepIndex) {
 
     if (step.allocated) {
 
-        explanationText.innerHTML =
+        let explanation;
 
-            `First Fit checks memory blocks from the beginning and `
-            + `allocates <b>P${step.processIndex + 1}</b> `
-            + `to the first block large enough to hold `
-            + `<b>${step.processSize}</b> units.`;
+
+        if (currentAlgorithm === "best-fit") {
+
+            explanation =
+
+                `Best Fit checks all memory blocks and `
+                + `allocates <b>P${step.processIndex + 1}</b> `
+                + `to the smallest block large enough to hold `
+                + `<b>${step.processSize}</b> units.`;
+
+        }
+
+        else if (currentAlgorithm === "worst-fit") {
+
+            explanation =
+
+                `Worst Fit checks all memory blocks and `
+                + `allocates <b>P${step.processIndex + 1}</b> `
+                + `to the largest block large enough to hold `
+                + `<b>${step.processSize}</b> units.`;
+
+        }
+
+        else {
+
+            explanation =
+
+                `First Fit checks memory blocks from the beginning and `
+                + `allocates <b>P${step.processIndex + 1}</b> `
+                + `to the first block large enough to hold `
+                + `<b>${step.processSize}</b> units.`;
+
+        }
+
+
+        explanationText.innerHTML = explanation;
 
     }
 
@@ -954,8 +1059,8 @@ if (saveSimBtn) {
             return;
         }
 
-        const algo = algorithmSelect.value;
-        const algoName = algo === "first-fit" ? "First Fit" : (algo === "best-fit" ? "Best Fit" : "Worst Fit");
+        const algo = currentAlgorithm;
+        const algoName = getAlgorithmName(algo);
         const allocCount = resultAllocated.textContent !== "-" ? resultAllocated.textContent : "0";
         const unallocCount = resultUnallocated.textContent !== "-" ? resultUnallocated.textContent : "0";
         const remMem = resultRemaining.textContent !== "-" ? resultRemaining.textContent : "0";

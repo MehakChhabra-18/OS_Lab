@@ -4,24 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>OS Lab | CPU Scheduling</title>
+<!-- Apply the saved theme before first paint (prevents a flash of the dark theme) -->
+<script>
+    try {
+        if (JSON.parse(localStorage.getItem("oslab_theme")) === "light") {
+            document.documentElement.classList.add("light-theme");
+        }
+    } catch (err) {}
+</script>
+
 <link rel="stylesheet" href="css/scheduling.css">
+<link rel="stylesheet" href="css/navbar.css">
 </head>
 
 <body>
 
+<!-- =====================================================
+     HEADER / NAVBAR
+===================================================== -->
 <header>
-
     <div class="brand">
-
-        <div class="brand-icon">
-            ⚙
-        </div>
-
+        <div class="brand-icon">⚙</div>
         <div>
             <h1>OS <span>Lab</span></h1>
             <p>Visualize | Learn | Experiment</p>
         </div>
-
     </div>
 
     <nav>
@@ -33,10 +40,7 @@
         <a href="history.html">Simulation History</a>
     </nav>
 
-    <div class="theme-toggle">
-        ☾
-    </div>
-
+    <button type="button" class="theme-toggle" title="Toggle Theme" aria-label="Switch to Light Mode">☾</button>
 </header>
 
 <main>
@@ -565,12 +569,11 @@
 </main>
 
 
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 <footer>
-
-    <p>
-        © 2026 OS Lab | Built with HTML, CSS and JavaScript
-    </p>
-
+    <p>© 2026 OS Lab | Built with HTML5, CSS3, and Vanilla JavaScript</p>
 </footer>
 
 

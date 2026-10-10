@@ -1,0 +1,398 @@
+
+/* ==============================
+   OS LAB - SHARED NAVBAR
+============================== */
+
+/* Typography is pinned here so the header and footer render identically on
+   every page, no matter which body font / line-height the page stylesheet
+   uses (disk-scheduling.css uses "Poppins"/"Segoe UI", landing.css and
+   memory-allocation.css set line-height: 1.6, history.css uses Arial). */
+header,
+footer {
+    font-family: Arial, sans-serif;
+    line-height: normal;
+}
+
+header {
+    min-height: 104px;
+    padding: 16px 40px;
+    background: #0b172d;
+    border-bottom: 1px solid #26385d;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #11213f;
+    border: 1px solid #26385d;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    color: #4f8cff;
+}
+
+.brand h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #e8edff;
+}
+
+.brand h1 span {
+    color: #4f8cff;
+}
+
+.brand p {
+    font-size: 13px;
+    color: #8da2c9;
+    margin-top: 4px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    text-decoration: none;
+    color: #8da2c9;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    transition: 0.2s ease;
+
+    /* 44px minimum touch target (WCAG 2.5.5) */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+
+nav a:focus-visible {
+    outline: 2px solid #4f8cff;
+    outline-offset: 2px;
+}
+
+nav a:hover {
+    color: #ffffff;
+    background: #11213f;
+}
+
+nav a.active {
+    color: #ffffff;
+    background: #172b50;
+    border-color: #36598d;
+}
+
+/* The theme toggle is a real <button> — reset native button styling,
+   keep a 44px touch target and add a visible keyboard focus ring. */
+.theme-toggle {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: inherit;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    min-height: 44px;
+
+    color: #8ba9e8;
+    font-size: 21px;
+    line-height: 1;
+
+    border-radius: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle:hover {
+    color: #ffffff;
+    background: #11213f;
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid #4f8cff;
+    outline-offset: 2px;
+}
+
+/* ==============================
+   OS LAB - SHARED FOOTER
+============================== */
+
+footer {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #1e335a;
+    background: #07101f;
+    color: #8da2c9;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ==============================
+   SHARED STICKY FOOTER
+   Pins the footer to the bottom of the viewport on short pages and lets
+   <main> fill the remaining space, identically on all pages.
+============================== */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* ==============================
+   SHARED COOKIE NOTICE
+   (injected by js/app-common.js)
+============================== */
+
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 24px;
+
+    background: #0d1b33;
+    border-top: 1px solid #233b66;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+
+    font-size: 13px;
+    color: #c5d6f8;
+}
+
+/* Pages that pin their Prev/Next step controls to the bottom
+   edge (disk scheduling, memory allocation use .action-bar)
+   lift the cookie notice just above that bar so the opaque
+   banner never hides the step buttons. When the notice is
+   dismissed the bar keeps bottom: 0. */
+body:has(.action-bar) .cookie-banner {
+    bottom: 76px;
+}
+
+.cookie-banner-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cookie-banner-icon {
+    font-size: 16px;
+}
+
+.cookie-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cookie-btn {
+    min-height: 36px;
+    padding: 6px 14px;
+
+    border-radius: 6px;
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.cookie-btn:focus-visible {
+    outline: 2px solid #4f8cff;
+    outline-offset: 2px;
+}
+
+.cookie-btn-primary {
+    background: #3b82f6;
+    border: none;
+    color: #ffffff;
+}
+
+.cookie-btn-ghost {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+}
+
+/* Bigger targets on touch devices */
+@media (pointer: coarse) {
+    .cookie-btn {
+        min-height: 44px;
+        padding: 10px 16px;
+    }
+}
+
+/* ==============================
+   SHARED LIGHT THEME (HEADER / FOOTER)
+============================== */
+
+/* Anchored on <html> so the pre-paint script in <head> takes effect
+   immediately, before js/storage.js has run. */
+
+html.light-theme header {
+    background: #ffffff;
+    border-bottom: 1px solid #cbd5e1;
+    color: #0f172a;
+}
+
+html.light-theme nav a {
+    color: #475569;
+}
+
+html.light-theme nav a:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+html.light-theme nav a.active {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #1e3a8a;
+}
+
+html.light-theme .brand-icon {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+html.light-theme .brand h1 {
+    color: #0f172a;
+}
+
+html.light-theme .theme-toggle {
+    color: #475569;
+}
+
+html.light-theme .theme-toggle:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+html.light-theme .cookie-banner {
+    background: #ffffff;
+    border-top-color: #cbd5e1;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.12);
+    color: #475569;
+}
+
+html.light-theme .cookie-btn-ghost {
+    border-color: #cbd5e1;
+    color: #64748b;
+}
+
+html.light-theme .brand p {
+    color: #64748b;
+}
+
+html.light-theme footer {
+    background: #f8fafc;
+    border-top: 1px solid #cbd5e1;
+    color: #64748b;
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+    header {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 16px 20px;
+        gap: 14px;
+    }
+
+    nav {
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    header {
+        padding: 14px 12px;
+    }
+
+    .brand-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 21px;
+    }
+
+    .brand h1 {
+        font-size: 23px;
+    }
+
+    .brand p {
+        font-size: 11px;
+    }
+
+    nav {
+        gap: 6px;
+
+        /* One horizontally scrollable row keeps the sticky header compact on
+           phones instead of stacking 2-3 wrapped rows over the content.
+           `safe center` centers the links when they fit and start-aligns them
+           when they must scroll, so the first links are never clipped. */
+        flex-wrap: nowrap;
+        justify-content: center;
+        justify-content: safe center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav a {
+        flex-shrink: 0;
+        font-size: 13px;
+        padding: 12px;
+        min-height: 44px;
+    }
+}
