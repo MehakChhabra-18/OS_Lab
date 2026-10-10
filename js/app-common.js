@@ -116,27 +116,72 @@
        ========================================================= */
     window.OSLabModules = null;
 
-    async function loadModuleConfig() {
-        try {
-            const response = await fetch("./data/modules.json");
-            if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+    /**
+     * Fallback #2: load data/modules-config.js with a <script> tag.
+     * Browsers block fetch()/XHR to local files under the file:// protocol,
+     * but <script src> to a local file is still allowed, so this works
+     * when the user opens the HTML pages directly from disk.
+     */
+    function loadModuleConfigViaScriptTag() {
+        return new Promise((resolve, reject) => {
+            // Reuse the global if the script tag has already run once
+            if (window.OSLabModuleConfig && Array.isArray(window.OSLabModuleConfig.modules)) {
+                window.OSLabModules = window.OSLabModuleConfig.modules;
+                return resolve(window.OSLabModules);
             }
-            const data = await response.json();
-            window.OSLabModules = data.modules || [];
-            console.log("[OSLab] Loaded modules configuration via Fetch:", window.OSLabModules);
-            return window.OSLabModules;
-        } catch (err) {
-            console.warn("[OSLab] Could not load data/modules.json via fetch, using fallback:", err);
-            // Fallback hardcoded configuration if fetch is blocked (e.g. file:// protocol)
-            window.OSLabModules = [
-                { id: "page-replacement", name: "Page Replacement" },
-                { id: "cpu-scheduling", name: "CPU Scheduling" },
-                { id: "disk-scheduling", name: "Disk Scheduling" },
-                { id: "memory-allocation", name: "Memory Allocation" }
-            ];
-            return window.OSLabModules;
+
+            const script = document.createElement("script");
+            script.src = "./data/modules-config.js";
+            script.onload = () => {
+                if (window.OSLabModuleConfig && Array.isArray(window.OSLabModuleConfig.modules)) {
+                    window.OSLabModules = window.OSLabModuleConfig.modules;
+                    resolve(window.OSLabModules);
+                } else {
+                    reject(new Error("modules-config.js loaded but did not define OSLabModuleConfig"));
+                }
+            };
+            script.onerror = () => reject(new Error("Could not load ./data/modules-config.js"));
+            document.head.appendChild(script);
+        });
+    }
+
+    async function loadModuleConfig() {
+        // fetch() to a local file is guaranteed to fail on file://,
+        // so skip it and go straight to the script-tag loader (no console warning).
+        const isFileProtocol = window.location.protocol === "file:";
+
+        if (!isFileProtocol) {
+            try {
+                const response = await fetch("./data/modules.json");
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                window.OSLabModules = data.modules || [];
+                console.log("[OSLab] Loaded modules configuration via Fetch:", window.OSLabModules);
+                return window.OSLabModules;
+            } catch (err) {
+                console.info("[OSLab] Fetch of data/modules.json failed (" + err.message + "), trying script-tag fallback.");
+            }
         }
+
+        // Fallback #1: same full data, loaded via <script src="data/modules-config.js">
+        try {
+            window.OSLabModules = await loadModuleConfigViaScriptTag();
+            console.log("[OSLab] Loaded modules configuration via script-tag fallback:", window.OSLabModules);
+            return window.OSLabModules;
+        } catch (scriptErr) {
+            console.warn("[OSLab] Script-tag fallback failed, using minimal hardcoded list:", scriptErr);
+        }
+
+        // Fallback #2 (last resort): minimal hardcoded configuration
+        window.OSLabModules = [
+            { id: "page-replacement", name: "Page Replacement" },
+            { id: "cpu-scheduling", name: "CPU Scheduling" },
+            { id: "disk-scheduling", name: "Disk Scheduling" },
+            { id: "memory-allocation", name: "Memory Allocation" }
+        ];
+        return window.OSLabModules;
     }
 
     /* =========================================================
